@@ -55,10 +55,6 @@ void LoadPythonInterperter()
 		InitPythonFunctions();
 		(*_Py_Initialize)();
 		PYRUN("import sys;sys.path.append('" SYSPATH "')");
-		PYRUN("from pyinit import *");
-		char tmpstr[1024];
-		sprintf(tmpstr,"PyInit('%p')",phandle);
-		PYRUN(tmpstr);	
 	}
 
 }
@@ -77,6 +73,12 @@ void mytick()
 	PYRUN("PyTick()");
 }
 
+void mybeginplay()
+{
+	char tmpstr[1024];
+	sprintf(tmpstr,"PyBeginPlay('%p')",reinterpret_cast<void*>(GWorld->GetWorld()));
+	PYRUN(tmpstr);	
+}
 
 int calledfrompython()
 {
@@ -91,7 +93,11 @@ int calledfrompython()
 void PythonButtonClicked()
 {
 	PYRUN("import pyinit;import imp;imp.reload(pyinit)");
-	PYRUN("PythonButtonClicked()");
+	PYRUN("from pyinit import *");
+	char tmpstr[1024];
+	sprintf(tmpstr,"PyInit('%p')",reinterpret_cast<void*>(GWorld->GetWorld()));
+	PYRUN(tmpstr);	
+
 	//UGameViewportClient* ViewportClient = GWorld->GetGameViewport();
 	//FViewport* InViewport = ViewportClient->Viewport;
 	//FIntVector Size(InViewport->GetSizeXY().X, InViewport->GetSizeXY().Y, 0);

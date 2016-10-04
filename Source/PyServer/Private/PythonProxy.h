@@ -6,7 +6,7 @@ void LoadPythonInterperter();
 
 void PythonButtonClicked();
 
-
+void mybeginplay();
 
 void mytick();
 }

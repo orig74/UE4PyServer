@@ -19,7 +19,7 @@ void APyServerTickActor::BeginPlay()
 {
 	Super::BeginPlay();
 	UE_LOG(LogTemp, Warning, TEXT("called APyServerTickActor::BeginPlay\n"));
-	
+	mybeginplay();	
 }
 
 // Called every frame

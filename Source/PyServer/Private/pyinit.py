@@ -11,11 +11,12 @@ libc.calledfrompython.argtypes=[]
 libc.calledfrompython.restype=c_int
 
 
-def PythonButtonClicked():
-    print('PythonButtonClicked inside python!!!')
-
 def PyInit(gworld):
     print('In PyInit, gworld=',gworld)
+
+def PyBeginPlay(gworld):
+    print('In PyBeginPlay, gworld=',gworld)
+ 
 
 def PyTick():
     global cnt
