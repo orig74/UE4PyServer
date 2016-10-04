@@ -14,12 +14,16 @@ libc.calledfrompython.restype=c_int
 def PythonButtonClicked():
     print('PythonButtonClicked inside python!!!')
 
+def PyInit(gworld):
+    print('In PyInit, gworld=',gworld)
+
 def PyTick():
     global cnt
     if (cnt%10)==0:
         print('in pytick')
         libc.calledfrompython()
         print('in pytick 2')
+
 
 if __name__=="__main__":
     PyTick()

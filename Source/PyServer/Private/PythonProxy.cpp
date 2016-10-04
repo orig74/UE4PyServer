@@ -30,21 +30,32 @@ extern "C" {
 #define PYRUN(x) (*PyRun_SimpleString)(x)
 //#error stopping!
 
-void* phandle=NULL;
 
+void (*_Py_Initialize)();
 void (*PyRun_SimpleString)(const char*);
 PyObject * (*_PyImport_ImportModule)(const char*);
 PyObject * (*_PyObject_GetAttrString)(PyObject*,const char*);
 int (*_PyCallable_Check)(PyObject*);
 PyObject * (*_PyObject_CallObject)(PyObject*,PyObject*);
+PyObject * (*_PyLong_FromLong)(long);
+PyObject * (*_PyTuple_New)(Py_ssize_t);
+int (*_PyTuple_SetItem)(PyObject *, Py_ssize_t , PyObject *);
+
+PyObject *initModule=NULL;
+void* phandle=NULL;
 
 void InitPythonFunctions()
 {
+	phandle=dlopen(PYTHON_LIB,RTLD_LAZY);
+	_Py_Initialize=reinterpret_cast<void (*)()>(dlsym(phandle,"Py_Initialize"));
 	PyRun_SimpleString=reinterpret_cast<void (*)(const char*)>(dlsym(phandle,"PyRun_SimpleString"));
 	_PyImport_ImportModule=reinterpret_cast<PyObject* (*)(const char*)>(dlsym(phandle,"PyImport_ImportModule"));
 	_PyObject_GetAttrString=reinterpret_cast<PyObject* (*)(PyObject*,const char*)>(dlsym(phandle,"PyObject_GetAttrString"));
 	_PyCallable_Check=reinterpret_cast<int (*)(PyObject*)>(dlsym(phandle,"PyCallable_Check"));
 	_PyObject_CallObject=reinterpret_cast<PyObject* (*)(PyObject*,PyObject*)>(dlsym(phandle,"PyObject_CallObject"));
+	_PyLong_FromLong=reinterpret_cast<PyObject* (*)(long)>(dlsym(phandle,"PyLong_FromLong"));
+	_PyTuple_New=reinterpret_cast<PyObject* (*)(Py_ssize_t)>(dlsym(phandle,"PyTuple_New"));
+	_PyTuple_SetItem=reinterpret_cast<int (*)(PyObject *, Py_ssize_t , PyObject *)>(dlsym(phandle,"PyTuple_SetItem"));
 }
 
 
@@ -53,43 +64,47 @@ void LoadPythonInterperter()
 
 	if (phandle==NULL)
 	{
-		phandle=dlopen(PYTHON_LIB,RTLD_LAZY);
-		void (*Py_Initialize)();
 		UE_LOG(LogTemp, Warning, TEXT("Starting LoadPythonInterperter...\n"));
-		Py_Initialize=reinterpret_cast<void (*)()>(dlsym(phandle,"Py_Initialize"));
 		//printf("---%d %d %s\n",phandle,Py_Initialize,PYTHON_LIB);
 		InitPythonFunctions();
-		(*Py_Initialize)();
+		(*_Py_Initialize)();
 		PYRUN("import sys;sys.path.append('" SYSPATH "')");
 		PYRUN("from pyinit import *");
-		
+		initModule = (*_PyImport_ImportModule)("pyinit");
+		if (initModule != NULL) {
+			PyObject *pFunc = (*_PyObject_GetAttrString)(initModule, "PyInit");
+			if (pFunc && (*_PyCallable_Check)(pFunc)) {
+				PyObject *aArgs=(*_PyTuple_New)(1);
+				PyObject *pValue=(*_PyLong_FromLong)(500L);
+				(*PyTuple_SetItem)(aArgs,0,pValue);		
+				(*_PyObject_CallObject)(pFunc,aArgs);
+				Py_XDECREF(pValue);
+				Py_XDECREF(aArgs);
+			} else {
+				UE_LOG(LogTemp, Warning, TEXT("cant find function PyTick\n")); 
+			}	
+			Py_XDECREF(pFunc);
+		} else {
+			UE_LOG(LogTemp, Warning, TEXT("cant find module pyinit\n")); 
+		}
+	
 	}
 
 }
 
+
+void StopPythonInterperter()
+{
+	//TODO:
+	Py_XDECREF(initModule);
+	//TODO: call PyFinalize
+	UE_LOG(LogTemp, Warning, TEXT("StopPythonInterperter...\n")); 
+}
 //TFunction<void> SampleTimerExpired();
 
 void mytick()
 {
-	PyObject *pModule=NULL, *pDict=NULL, *pFunc=NULL;
-	//pName = PyUnicode_DecodeFSDefault("pyinit.py");
-	//pModule = PyImport_Import(pName);
-	//Py_DECREF(pName);
-	pModule = (*_PyImport_ImportModule)("pyinit");
-	
-	if (pModule != NULL) {
-		pFunc = (*_PyObject_GetAttrString)(pModule, "PyTick");
-		if (pFunc && (*_PyCallable_Check)(pFunc)) {
-			(*_PyObject_CallObject)(pFunc,NULL);
-		} else {
-			UE_LOG(LogTemp, Warning, TEXT("cant find function PyTick\n")); 
-		}	
-	} else {
-		UE_LOG(LogTemp, Warning, TEXT("cant find module pyinit\n")); 
-	}
-	Py_XDECREF(pFunc);
-	
-	Py_XDECREF(pModule);
+	PYRUN("mytick()");
 }
 
 
