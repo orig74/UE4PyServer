@@ -4,3 +4,4 @@ Resources
 *.pyc
 *.swp
 Source/PyServer/run.sh
+Source/PyServer/Private/entry_point.py
