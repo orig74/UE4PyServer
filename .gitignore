@@ -2,3 +2,5 @@ Binaries
 Intermediate
 Resources
 *.pyc
+*.swp
+Source/PyServer/run.sh
