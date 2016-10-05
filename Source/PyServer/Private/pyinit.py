@@ -1,29 +1,35 @@
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
 print('pyinit imported')
 cnt=0
-from ctypes import *
-import os
+import os,imp
+import Wrappers
+from Wrappers import phandlers
+import entry_point
 
-pluginpath=os.path.abspath(os.path.dirname(__file__)+'/../../../')
-libfile=pluginpath+'/Binaries/Linux/libUE4Editor-PyServer.so'
-libc=CDLL(libfile)
-libc.calledfrompython.argtypes=[]
-libc.calledfrompython.restype=c_int
 
+main_loop_iter=None
 
 def PyInit(gworld):
     print('In PyInit, gworld=',gworld)
 
 def PyBeginPlay(gworld):
-    print('In PyBeginPlay, gworld=',gworld)
- 
+    global main_loop_iter
+    print('In PyBeginPlay, gworld=',gworld,type(gworld))
+    if main_loop_iter is not None: #already running!
+        entry_point.kill()
+    #import pdb;pdb.set_trace()
+    imp.reload(entry_point)
+    main_loop_iter=entry_point.main_loop(phandlers._StrToPtr(gworld))
 
 def PyTick():
     global cnt
-    if (cnt%10)==0:
+    if main_loop_iter is not None:
+        main_loop_iter.next()
+    if (cnt%1000)==0:
         print('in pytick')
-        libc.calledfrompython()
+        Wrappers.libc.calledfrompython()
         print('in pytick 2')
+    cnt+=1
 
 
 if __name__=="__main__":
