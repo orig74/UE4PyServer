@@ -30,3 +30,19 @@ libc.FindActorByName.restype=c_void_p
 def FindActorByName(uworld,name,verbose=0):
     namebytes=name.encode('utf-8')
     return libc.FindActorByName(uworld,namebytes,verbose)
+
+float3type=c_float*3
+float3type_p=POINTER(float3type)
+libc.GetActorLocation.argtypes=[c_void_p,float3type_p]
+def GetActorLocation(actor):
+    vec=float3type()
+    libc.GetActorLocation(actor,pointer(vec))
+    return tuple(vec)
+
+libc.SetActorLocation.argtypes=[c_void_p,float3type_p]
+def SetActorLocation(actor,invec):
+    vec=float3type(*invec)
+    libc.SetActorLocation(actor,vec)
+
+
+    

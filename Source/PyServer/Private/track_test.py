@@ -7,9 +7,14 @@ def main_loop(gworld):
         #print('-------> main_loop',iter)
         yield
         iter+=1
-        if iter==100:
-            #import ipdb;ipdb.set_trace()
-            print('got to iter 100')
+        if iter%100==0:
+            import imp; imp.reload(ph)
+            import ipdb;ipdb.set_trace()
+            actor=ph.FindActorByName(gworld,'CameraActor_0',1)
+            actor1=ph.FindActorByName(gworld,'FirstPersonCharacter',1)
+            loc=ph.GetActorLocation(actor1)
+            print('-----',loc)
+            ph.SetActorLocation(actor,loc)
 
 def kill():
     print('tracker_test killed')
