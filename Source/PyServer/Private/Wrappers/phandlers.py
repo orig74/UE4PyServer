@@ -44,5 +44,8 @@ def SetActorLocation(actor,invec):
     vec=float3type(*invec)
     libc.SetActorLocation(actor,vec)
 
+libc.MoveToCameraActor.argtypes=[c_void_p,c_void_p]
+def MoveToCameraActor(actor,camera):
+    libc.MoveToCameraActor(actor,camera)
 
     

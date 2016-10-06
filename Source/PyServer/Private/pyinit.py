@@ -15,10 +15,13 @@ def PyInit(gworld):
 def PyBeginPlay(gworld):
     global main_loop_iter
     print('In PyBeginPlay, gworld=',gworld,type(gworld))
+    imp.reload(entry_point)
     if main_loop_iter is not None: #already running!
         entry_point.kill()
-    imp.reload(entry_point)
+    #imp.reload(entry_point.main_module)
     entry_point.reload()
+    import track_test
+    imp.reload(track_test)
     imp.reload(phandlers)
     #import ipdb;ipdb.set_trace()
     main_loop_iter=entry_point.main_loop(phandlers._StrToPtr(gworld))

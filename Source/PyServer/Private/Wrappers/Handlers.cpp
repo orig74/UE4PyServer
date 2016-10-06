@@ -76,7 +76,11 @@ void SetActorRotation(AActor* actor,float* invec)
 	actor->SetActorRotation(FRotator(invec[0],invec[1],invec[2]));
 }
 
-
+void MoveToCameraActor(AActor* actor,ACameraActor* camera)
+{
+	APlayerController* OurPlayerController = UGameplayStatics::GetPlayerController(actor,0);
+	OurPlayerController->SetViewTarget(camera);
+}
 
 
 } //extern "C"
