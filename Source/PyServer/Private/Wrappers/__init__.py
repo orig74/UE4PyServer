@@ -5,4 +5,4 @@ pluginpath=os.path.abspath(os.path.dirname(__file__)+'/../../../../')
 libfile=pluginpath+'/Binaries/Linux/libUE4Editor-PyServer.so'
 libc=ctypes.CDLL(libfile)
 libc.calledfrompython.argtypes=[]
-libc.calledfrompython.restype=c_int
+libc.calledfrompython.restype=ctypes.c_int

@@ -17,14 +17,19 @@ def PyBeginPlay(gworld):
     print('In PyBeginPlay, gworld=',gworld,type(gworld))
     if main_loop_iter is not None: #already running!
         entry_point.kill()
-    #import pdb;pdb.set_trace()
     imp.reload(entry_point)
+    entry_point.reload()
+    imp.reload(phandlers)
+    #import ipdb;ipdb.set_trace()
     main_loop_iter=entry_point.main_loop(phandlers._StrToPtr(gworld))
+    next(main_loop_iter)
 
 def PyTick():
-    global cnt
+    global cnt,main_loop_iter
     if main_loop_iter is not None:
-        main_loop_iter.next()
+        #if cnt==10:
+        #    import pdb;pdb.set_trace()
+        next(main_loop_iter)
     if (cnt%1000)==0:
         print('in pytick')
         Wrappers.libc.calledfrompython()
