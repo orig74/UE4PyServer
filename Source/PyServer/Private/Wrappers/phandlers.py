@@ -48,4 +48,13 @@ libc.MoveToCameraActor.argtypes=[c_void_p,c_void_p]
 def MoveToCameraActor(actor,camera):
     libc.MoveToCameraActor(actor,camera)
 
-    
+libc.RequestScreenshot.argtypes=[c_char_p,c_bool,c_bool]
+def RequestScreenshot(fname='/tmp/screenshot.png',bInShowUI=False,bAddFilenameSuffix=False):
+    bfname=fname.encode('utf-8')
+    libc.RequestScreenshot(bfname,bInShowUI,bAddFilenameSuffix)    
+
+def GetCvScreenshot(fname='/tmp/screenshot.png',bInShowUI=False,bAddFilenameSuffix=False):
+    RequestScreenshot(fname,bInShowUI,bAddFilenameSuffix)
+    import cv2
+    return cv2.imread(fname)
+

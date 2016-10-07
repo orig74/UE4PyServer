@@ -10,6 +10,8 @@ import entry_point
 main_loop_iter=None
 
 def PyInit(gworld):
+    import track_test
+    imp.reload(track_test)
     print('In PyInit, gworld=',gworld)
 
 def PyBeginPlay(gworld):
@@ -20,8 +22,6 @@ def PyBeginPlay(gworld):
         entry_point.kill()
     #imp.reload(entry_point.main_module)
     entry_point.reload()
-    import track_test
-    imp.reload(track_test)
     imp.reload(phandlers)
     #import ipdb;ipdb.set_trace()
     main_loop_iter=entry_point.main_loop(phandlers._StrToPtr(gworld))

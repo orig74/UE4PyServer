@@ -82,5 +82,26 @@ void MoveToCameraActor(AActor* actor,ACameraActor* camera)
 	OurPlayerController->SetViewTarget(camera);
 }
 
+void RequestScreenshot(const char* fname,bool bInShowUI,bool bAddFilenameSuffix)
+{
+	FString filename(fname);
+	FScreenshotRequest::RequestScreenshot(filename, bInShowUI, bAddFilenameSuffix);
+
+}
+/*UGameViewportClient* gameViewport = GEngine->GameViewport;
+    FViewport* InViewport = gameViewport->Viewport;
+    TArray<FColor> Bitmap;
+    FIntRect Rect(0, 0, InViewport->GetSizeXY().X, InViewport->GetSizeXY().Y);
+    bool bScreenshotSuccessful = GetViewportScreenShot(InViewport, Bitmap, Rect);
+    if (bScreenshotSuccessful){
+        FIntVector Size(InViewport->GetSizeXY().X, InViewport->GetSizeXY().Y, 0);
+        TArray<uint8> CompressedBitmap;
+        FString ScreenShotName = TEXT("out.png");
+        FImageUtils::CompressImageArray(Size.X, Size.Y, Bitmap, CompressedBitmap);
+        FFileHelper::SaveArrayToFile(CompressedBitmap, *ScreenShotName);
+    }*/
+
+
+
 
 } //extern "C"
