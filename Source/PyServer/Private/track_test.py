@@ -12,7 +12,7 @@ cv2.destroyAllWindows()
 cv2.waitKey(1)
 
 def main_loop(gworld):
-    iter=0
+    cnt=0
     print('-------> start main_loop 2')
     of=optical_flow_track()
     #cv2.destroyAllWindows()
@@ -22,32 +22,39 @@ def main_loop(gworld):
         while 1:
             yield
     tick_actor=ph.FindActorByName(gworld,'PyServerTickActor_0',1)
+    camera_initial_location=(-370-1000,-2920,510+300)
+    ph.SetActorLocation(camera_actor,camera_initial_location)
+    ph.SetActorRotation(camera_actor,(-0,-180,-0))
+    yield
     ph.MoveToCameraActor(tick_actor,camera_actor)
-    while 1:
-        #print('-------> main_loop',iter)
-        yield
-        iter+=1
-            #aname='CameraActor_0'
-            #aname='CameraActor_0'
-            #actor=ph.FindActorByName(gworld,aname,1)
-            #actor1=ph.FindActorByName(gworld,'FirstPersonCharacter',1)
-            #loc=ph.GetActorLocation(cameraactor)
-            #print('-----',loc)
-            #ph.SetActorLocation(actor,((iter/100)*10,0,0))
 
+
+    for i in range(100): #adjustment frames...
+        yield
+ 
+    while 1:
+        #print('-------> main_loop',cnt)
+        yield
+        speed=2.0
+        cycle=400
+        #ph.GetCvScreenshot()
         img=cv2.resize(ph.GetCvScreenshot(),(640,480))
-        if iter>10 and (iter%1)==0:
+        #img=None#img=ph.GetCvScreenshot()
+        direction=-1 if (cnt%cycle) > cycle/2 else 1
+        if cnt<cycle:
             #import ipdb;ipdb.set_trace()
             loc=ph.GetActorLocation(camera_actor)
-            ph.SetActorLocation(camera_actor,(((iter/100)%20)*1+loc[0],loc[1],loc[2]))
+            ph.SetActorLocation(camera_actor,(direction*speed+loc[0],direction*speed+loc[1],loc[2]))
             if img is None:
                 print('got None im')
             else:
-                print('got img',img.shape)
-                #import pdb;pdb.set_trace()
+                print('cnt=',cnt,direction,img.shape)
                 retimg=of.feed(img)
                 cv2.imshow('opencv window',retimg)
                 cv2.waitKey(1)
+                #if cnt<6:
+                #    import pdb;pdb.set_trace()
+        cnt+=1
 
 def kill():
     print('tracker_test killed')

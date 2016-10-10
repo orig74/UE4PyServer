@@ -44,6 +44,18 @@ def SetActorLocation(actor,invec):
     vec=float3type(*invec)
     libc.SetActorLocation(actor,vec)
 
+libc.GetActorRotation.argtypes=[c_void_p,float3type_p]
+def GetActorRotation(actor):
+    vec=float3type()
+    libc.GetActorRotation(actor,pointer(vec))
+    return tuple(vec)
+
+libc.SetActorRotation.argtypes=[c_void_p,float3type_p]
+def SetActorRotation(actor,invec):
+    vec=float3type(*invec)
+    libc.SetActorRotation(actor,vec)
+
+
 libc.MoveToCameraActor.argtypes=[c_void_p,c_void_p]
 def MoveToCameraActor(actor,camera):
     libc.MoveToCameraActor(actor,camera)
@@ -52,6 +64,12 @@ libc.RequestScreenshot.argtypes=[c_char_p,c_bool,c_bool]
 def RequestScreenshot(fname='/tmp/screenshot.png',bInShowUI=False,bAddFilenameSuffix=False):
     bfname=fname.encode('utf-8')
     libc.RequestScreenshot(bfname,bInShowUI,bAddFilenameSuffix)    
+
+libc.RequestScreenshot2.argtypes=[c_void_p,c_char_p]
+def RequestScreenshot2(uworld,fname='/tmp/screenshot.png')
+    bfname=fname.encode('utf-8') 
+    libc.RequestScreenshot(uworld,bfname)
+
 
 def GetCvScreenshot(fname='/tmp/screenshot.png',bInShowUI=False,bAddFilenameSuffix=False):
     RequestScreenshot(fname,bInShowUI,bAddFilenameSuffix)

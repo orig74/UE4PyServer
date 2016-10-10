@@ -4,16 +4,11 @@ import cv2
 
 class optical_flow_track(object):
     def __init__(self):
-    # params for ShiTomasi corner detection
-        self.feature_params = dict( maxCorners = 100,
-                        qualityLevel = 0.3,
-                        minDistance = 7,
-                        blockSize = 7 )
 
         # Parameters for lucas kanade optical flow
         self.lk_params = dict( winSize  = (15,15),
                    maxLevel = 2,
-                   criteria = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 0.03))
+                   criteria = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 0.08))
 
         # Create some random colors
         self.color = np.random.randint(0,255,(2000,3))
@@ -25,8 +20,8 @@ class optical_flow_track(object):
         if self.old_gray is None:
             self.old_frame=frame
             self.old_gray=cv2.cvtColor(self.old_frame, cv2.COLOR_BGR2GRAY)
-            #self.p0 = cv2.goodFeaturesToTrack(self.old_gray, mask = None, **self.feature_params)
-            self.p0 = np.array([(i,j) for i in range(0,frame.shape[1],30) for j in range(0,frame.shape[0],30)],dtype='float32').reshape(-1,1,2)
+            marg=30
+            self.p0 = np.array([(i,j) for i in range(marg,frame.shape[1]-marg,30) for j in range(marg,frame.shape[0]-marg,30)],dtype='float32').reshape(-1,1,2)
 
         #import ipdb;ipdb.set_trace()
         frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)

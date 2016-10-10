@@ -65,7 +65,7 @@ void SetActorLocation(AActor* actor,float* invec)
 	actor->SetActorLocation(FVector(invec[0],invec[1],invec[2]));
 }
 
-void GetActorRotaion(AActor* actor,float* outvec)
+void GetActorRotation(AActor* actor,float* outvec)
 {
 	FRotator rot=actor->GetActorRotation();
 	outvec[0]=rot.Pitch;outvec[1]=rot.Yaw;outvec[2]=rot.Roll;
@@ -88,20 +88,23 @@ void RequestScreenshot(const char* fname,bool bInShowUI,bool bAddFilenameSuffix)
 	FScreenshotRequest::RequestScreenshot(filename, bInShowUI, bAddFilenameSuffix);
 
 }
-/*UGameViewportClient* gameViewport = GEngine->GameViewport;
-    FViewport* InViewport = gameViewport->Viewport;
-    TArray<FColor> Bitmap;
-    FIntRect Rect(0, 0, InViewport->GetSizeXY().X, InViewport->GetSizeXY().Y);
-    bool bScreenshotSuccessful = GetViewportScreenShot(InViewport, Bitmap, Rect);
-    if (bScreenshotSuccessful){
-        FIntVector Size(InViewport->GetSizeXY().X, InViewport->GetSizeXY().Y, 0);
-        TArray<uint8> CompressedBitmap;
-        FString ScreenShotName = TEXT("out.png");
-        FImageUtils::CompressImageArray(Size.X, Size.Y, Bitmap, CompressedBitmap);
-        FFileHelper::SaveArrayToFile(CompressedBitmap, *ScreenShotName);
-    }*/
 
+void RequestScreenshot2(UWorld* uworld,const char* fname)
+{
+	UGameViewportClient* gameViewport = uworld->GetGameViewport();
+	FViewport* InViewport = gameViewport->Viewport;
+	TArray<FColor> Bitmap;
+	FIntRect Rect(0, 0, InViewport->GetSizeXY().X, InViewport->GetSizeXY().Y);
+	bool bScreenshotSuccessful = GetViewportScreenShot(InViewport, Bitmap, Rect);
+	if (bScreenshotSuccessful){
+		FIntVector Size(InViewport->GetSizeXY().X, InViewport->GetSizeXY().Y, 0);
+		TArray<uint8> CompressedBitmap;
+		FString ScreenShotName = TEXT("out.png");
+		FImageUtils::CompressImageArray(Size.X, Size.Y, Bitmap, CompressedBitmap);
+		FFileHelper::SaveArrayToFile(CompressedBitmap, *ScreenShotName);
+	}
 
+}
 
 
 } //extern "C"
