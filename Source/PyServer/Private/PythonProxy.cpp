@@ -80,6 +80,14 @@ void mybeginplay()
 	PYRUN(tmpstr);	
 }
 
+void myendplay()
+{
+	char tmpstr[1024];
+	sprintf(tmpstr,"PyEndPlay('%p')",reinterpret_cast<void*>(GWorld->GetWorld()));
+	PYRUN(tmpstr);	
+	
+}
+
 int calledfrompython()
 {
 	printf("yo!!!\n");

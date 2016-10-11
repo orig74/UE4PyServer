@@ -38,7 +38,8 @@ def main_loop(gworld):
         speed=2.0
         cycle=400
         #ph.GetCvScreenshot()
-        img=cv2.resize(ph.GetCvScreenshot(),(640,480))
+        img=cv2.resize(ph.GetCvScreenshot2(gworld),(640,480))
+        #img=cv2.resize(ph.GetCvScreenshot(),(640,480))
         #img=None#img=ph.GetCvScreenshot()
         direction=-1 if (cnt%cycle) > cycle/2 else 1
         if cnt<cycle:
@@ -58,3 +59,5 @@ def main_loop(gworld):
 
 def kill():
     print('tracker_test killed')
+    cv2.destroyAllWindows()
+    for _ in range(10): cv2.waitKey(1)

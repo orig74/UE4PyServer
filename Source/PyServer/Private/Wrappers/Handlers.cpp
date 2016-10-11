@@ -92,16 +92,21 @@ void RequestScreenshot(const char* fname,bool bInShowUI,bool bAddFilenameSuffix)
 void RequestScreenshot2(UWorld* uworld,const char* fname)
 {
 	UGameViewportClient* gameViewport = uworld->GetGameViewport();
+	//UGameViewportClient* gameViewport = GEngine->GameViewport;
 	FViewport* InViewport = gameViewport->Viewport;
 	TArray<FColor> Bitmap;
 	FIntRect Rect(0, 0, InViewport->GetSizeXY().X, InViewport->GetSizeXY().Y);
 	bool bScreenshotSuccessful = GetViewportScreenShot(InViewport, Bitmap, Rect);
+	//bool bScreenshotSuccessful = (InViewport, Bitmap, Rect);
 	if (bScreenshotSuccessful){
 		FIntVector Size(InViewport->GetSizeXY().X, InViewport->GetSizeXY().Y, 0);
 		TArray<uint8> CompressedBitmap;
-		FString ScreenShotName = TEXT("out.png");
+		FString ScreenShotName(fname);
 		FImageUtils::CompressImageArray(Size.X, Size.Y, Bitmap, CompressedBitmap);
 		FFileHelper::SaveArrayToFile(CompressedBitmap, *ScreenShotName);
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("bScreenshotSuccessful=False InViewport=%p"),reinterpret_cast<void*>(InViewport));
 	}
 
 }

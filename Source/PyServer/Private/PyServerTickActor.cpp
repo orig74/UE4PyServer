@@ -22,6 +22,14 @@ void APyServerTickActor::BeginPlay()
 	mybeginplay();	
 }
 
+void APyServerTickActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	UE_LOG(LogTemp, Warning, TEXT("called APyServerTickActor::EndPlay\n"));
+	myendplay();	
+}
+
+
 // Called every frame
 void APyServerTickActor::Tick( float DeltaTime )
 {

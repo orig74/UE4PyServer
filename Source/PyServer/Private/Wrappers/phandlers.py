@@ -1,6 +1,7 @@
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
 from Wrappers import libc
 from ctypes import *
+import cv2
 
 libc.StrToPtr.argtypes=[c_char_p]
 libc.StrToPtr.restype=c_void_p
@@ -66,13 +67,16 @@ def RequestScreenshot(fname='/tmp/screenshot.png',bInShowUI=False,bAddFilenameSu
     libc.RequestScreenshot(bfname,bInShowUI,bAddFilenameSuffix)    
 
 libc.RequestScreenshot2.argtypes=[c_void_p,c_char_p]
-def RequestScreenshot2(uworld,fname='/tmp/screenshot.png')
+def RequestScreenshot2(uworld,fname):
     bfname=fname.encode('utf-8') 
-    libc.RequestScreenshot(uworld,bfname)
+    libc.RequestScreenshot2(uworld,bfname)
 
 
 def GetCvScreenshot(fname='/tmp/screenshot.png',bInShowUI=False,bAddFilenameSuffix=False):
     RequestScreenshot(fname,bInShowUI,bAddFilenameSuffix)
-    import cv2
+    return cv2.imread(fname)
+
+def GetCvScreenshot2(uworld,fname='/tmp/screenshot.png'):
+    RequestScreenshot2(uworld,fname)
     return cv2.imread(fname)
 

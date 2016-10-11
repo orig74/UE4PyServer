@@ -8,5 +8,7 @@ void PythonButtonClicked();
 
 void mybeginplay();
 
+void myendplay();
+
 void mytick();
 }

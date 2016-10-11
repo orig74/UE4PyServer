@@ -27,6 +27,12 @@ def PyBeginPlay(gworld):
     main_loop_iter=entry_point.main_loop(phandlers._StrToPtr(gworld))
     next(main_loop_iter)
 
+def PyEndPlay(gworld):
+    global main_loop_iter
+    print('In PyEndPlay, gworld=',gworld,type(gworld))
+    entry_point.kill()
+
+
 def PyTick():
     global cnt,main_loop_iter
     if main_loop_iter is not None:
