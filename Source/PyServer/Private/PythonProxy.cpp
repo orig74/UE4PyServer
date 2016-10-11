@@ -75,6 +75,7 @@ void mytick()
 
 void mybeginplay()
 {
+	PYRUN("from pyinit import *");
 	char tmpstr[1024];
 	sprintf(tmpstr,"PyBeginPlay('%p')",reinterpret_cast<void*>(GWorld->GetWorld()));
 	PYRUN(tmpstr);	
@@ -101,7 +102,6 @@ int calledfrompython()
 void PythonButtonClicked()
 {
 	PYRUN("import pyinit;import imp;imp.reload(pyinit)");
-	PYRUN("from pyinit import *");
 	char tmpstr[1024];
 	sprintf(tmpstr,"PyInit('%p')",reinterpret_cast<void*>(GWorld->GetWorld()));
 	PYRUN(tmpstr);	

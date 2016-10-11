@@ -127,30 +127,14 @@ int TakeScreenshot(uint8* out_ptr,int length)
 	FIntRect Rect(0, 0, InViewport->GetSizeXY().X, InViewport->GetSizeXY().Y);
 	bool bScreenshotSuccessful = GetViewportScreenShot(InViewport, Bitmap, Rect);
 	if (bScreenshotSuccessful){
-		//FArchive arc;
-		//Bitmap.BulkSerialize(arc);
-		//arc.Serialize(out_ptr,length);
 		int sx=InViewport->GetSizeXY().X;
 		int sy=InViewport->GetSizeXY().Y;
-		//int cnt=0;
-		//for(int y=0;y<sy;y++) for(int x=0;x<sx;x++)
-		//{
-		//	out_ptr[cnt*3]=Bitmap[x+y*sx].R;
-		//	out_ptr[cnt*3+1]=Bitmap[x+y*sx].G;
-		//	out_ptr[cnt*3+2]=Bitmap[x+y*sx].B;
-		//	cnt++;
-		//}
 		TArray<uint8> CompressedBitmap;
 		FImageUtils::CompressImageArray(sx, sy, Bitmap, CompressedBitmap);
-		//UE_LOG(LogTemp, Warning, TEXT("CompressedBitmap len %d"),CompressedBitmap.Num());
 		int cnt_non_zero=0;
 		check(CompressedBitmap.Num()<=length)
 		for(int i=0;i<CompressedBitmap.Num();i++) {
 			out_ptr[i]=CompressedBitmap[i];
-			//if(CompressedBitmap[i]!=0 && cnt_non_zero<10){
-			//	UE_LOG(LogTemp, Warning, TEXT("---- %d %d"),i,CompressedBitmap[i]);
-			//	cnt_non_zero++;
-			//}
 		}
 		return CompressedBitmap.Num();
 

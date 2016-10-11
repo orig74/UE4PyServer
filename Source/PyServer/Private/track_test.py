@@ -7,12 +7,14 @@ from optical_flow import optical_flow_track
 
 imp.reload(optical_flow)
 
+cvshow=True
 
 print('---- track_test imported ----')
 print('---- destroy cv windows ----')
-cv2.destroyAllWindows()
-#cv2.namedWindow('opencv window', cv2.WINDOW_NORMAL)
-cv2.waitKey(1)
+if cvshow:
+    cv2.destroyAllWindows()
+    #cv2.namedWindow('opencv window', cv2.WINDOW_NORMAL)
+    cv2.waitKey(1)
 
 def main_loop(gworld):
     cnt=0
@@ -30,9 +32,9 @@ def main_loop(gworld):
     ph.SetActorRotation(camera_actor,(-0,-180,-0))
     yield
     ph.MoveToCameraActor(tick_actor,camera_actor)
-    ph.SetScreenResolution(640,480)
+    #ph.SetScreenResolution(640,480)
 
-    for i in range(100): #adjustment frames...
+    for _ in range(100): #adjustment frames...
         yield
  
     while 1:
@@ -44,6 +46,7 @@ def main_loop(gworld):
         #img=cv2.resize(ph.GetCvScreenshot2(gworld),(640,480))
         tic=time.time()
         img=ph.TakeScreenshot() 
+        #continue
         #if cnt==0:
         #    import ipdb;ipdb.set_trace()
         #img=cv2.resize(img,(640,480))
@@ -57,16 +60,18 @@ def main_loop(gworld):
             if img is None:
                 print('got None im')
             else:
-                print('cnt=',cnt,direction,img.shape)
+                #print('cnt=',cnt,direction,img.shape)
                 retimg=of.feed(img)
-                cv2.imshow('opencv window',retimg)
-                cv2.waitKey(1)
+                if cvshow:
+                    cv2.imshow('opencv window',retimg)
+                    cv2.waitKey(1)
                 #if cnt<6:
                 #    import pdb;pdb.set_trace()
         cnt+=1
         print('---',time.time()-tic)
 
 def kill():
-    print('tracker_test killed')
-    cv2.destroyAllWindows()
-    for _ in range(10): cv2.waitKey(1)
+    if cvshow:
+        print('tracker_test killed')
+        cv2.destroyAllWindows()
+        for _ in range(10): cv2.waitKey(1)

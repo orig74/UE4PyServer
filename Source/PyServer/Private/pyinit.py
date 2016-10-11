@@ -13,7 +13,7 @@ def PyInit(gworld):
     import track_test
     imp.reload(track_test)
     print('In PyInit, gworld=',gworld)
-    phandlers.SetScreenResolution(640,480)
+    #phandlers.SetScreenResolution(640,480)
 
 def PyBeginPlay(gworld):
     global main_loop_iter
@@ -39,11 +39,15 @@ def PyTick():
     if main_loop_iter is not None:
         #if cnt==10:
         #    import pdb;pdb.set_trace()
-        next(main_loop_iter)
-    if (cnt%1000)==0:
-        print('in pytick')
-        Wrappers.libc.calledfrompython()
-        print('in pytick 2')
+        try:
+            next(main_loop_iter)
+        except StopIteration:
+            main_loop_iter=None
+            print("ending main loop!!")
+    #if (cnt%1000)==0:
+    #    print('in pytick')
+    #    Wrappers.libc.calledfrompython()
+    #    print('in pytick 2')
     cnt+=1
 
 
