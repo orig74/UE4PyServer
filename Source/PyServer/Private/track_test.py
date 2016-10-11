@@ -1,9 +1,12 @@
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
 from Wrappers import phandlers as ph
+import time
 import cv2,imp
 import optical_flow
 from optical_flow import optical_flow_track
+
 imp.reload(optical_flow)
+
 
 print('---- track_test imported ----')
 print('---- destroy cv windows ----')
@@ -27,7 +30,7 @@ def main_loop(gworld):
     ph.SetActorRotation(camera_actor,(-0,-180,-0))
     yield
     ph.MoveToCameraActor(tick_actor,camera_actor)
-
+    ph.SetScreenResolution(640,480)
 
     for i in range(100): #adjustment frames...
         yield
@@ -38,7 +41,12 @@ def main_loop(gworld):
         speed=2.0
         cycle=400
         #ph.GetCvScreenshot()
-        img=cv2.resize(ph.GetCvScreenshot2(gworld),(640,480))
+        #img=cv2.resize(ph.GetCvScreenshot2(gworld),(640,480))
+        tic=time.time()
+        img=ph.TakeScreenshot() 
+        #if cnt==0:
+        #    import ipdb;ipdb.set_trace()
+        #img=cv2.resize(img,(640,480))
         #img=cv2.resize(ph.GetCvScreenshot(),(640,480))
         #img=None#img=ph.GetCvScreenshot()
         direction=-1 if (cnt%cycle) > cycle/2 else 1
@@ -56,6 +64,7 @@ def main_loop(gworld):
                 #if cnt<6:
                 #    import pdb;pdb.set_trace()
         cnt+=1
+        print('---',time.time()-tic)
 
 def kill():
     print('tracker_test killed')

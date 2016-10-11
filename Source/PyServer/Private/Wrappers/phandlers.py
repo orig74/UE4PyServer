@@ -80,3 +80,26 @@ def GetCvScreenshot2(uworld,fname='/tmp/screenshot.png'):
     RequestScreenshot2(uworld,fname)
     return cv2.imread(fname)
 
+int2type=c_int*2
+libc.GetViewPortSize.argtypes=[POINTER(int2type)]
+libc.TakeScreenshot.argtypes=[c_void_p,c_int]
+#import numpy as np
+#tmp_capture_mem=b''
+import cv2
+import numpy as np
+tmp_capture_mem=np.array([1],dtype='uint8')
+def TakeScreenshot():
+        global tmp_capture_mem
+        sz=int2type()
+        libc.GetViewPortSize(pointer(sz))
+        req_mem_sz=sz[0]*sz[1]*3+1000# (RGB)+header
+        if len(tmp_capture_mem)<req_mem_sz:
+            #tmp_capture_mem=b'\0'*req_mem_sz
+            tmp_capture_mem=np.zeros(req_mem_sz,'uint8')
+        ptr=tmp_capture_mem.ctypes.data_as(c_void_p)
+        lsize=libc.TakeScreenshot(ptr,len(tmp_capture_mem))
+        return cv2.imdecode(tmp_capture_mem[:lsize],1)       
+
+libc.SetScreenResolution.argtypes=[c_int,c_int]
+def SetScreenResolution(x,y):
+    libc.SetScreenResolution(x,y)

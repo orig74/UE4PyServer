@@ -13,6 +13,7 @@ def PyInit(gworld):
     import track_test
     imp.reload(track_test)
     print('In PyInit, gworld=',gworld)
+    phandlers.SetScreenResolution(640,480)
 
 def PyBeginPlay(gworld):
     global main_loop_iter
