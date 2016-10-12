@@ -9,15 +9,10 @@ imp.reload(optical_flow)
 
 cvshow=True
 
-print('---- track_test imported ----')
-print('---- destroy cv windows ----')
-#cv2.destroyAllWindows()
-#for _ in range(5): cv2.waitKey(1)
 keep_running=True
 
 threaded=True
 if threaded:
-    #import threading 
     import multiprocessing as mp
     imgq=mp.Queue()
 else:    
@@ -26,22 +21,16 @@ else:
 
 def cv_loop(imgq):
     global keep_running
-    fd=open('/tmp/ori.txt','wb')
     of=optical_flow_track()
     if cvshow:
         cv2.destroyAllWindows()
-        #cv2.namedWindow('opencv window', cv2.WINDOW_NORMAL)
         cv2.waitKey(1)
     while keep_running:
         if imgq.empty():
             yield
             continue
-        fd.write(b'request img\n') ; fd.flush()
         img=imgq.get()
-        fd.write(b'got img\n') ; fd.flush()
         if img is None:
-            print('got none in queue')
-            fd.write(b'got img None\n') ; fd.flush()
             break
         
         #retimg=img
@@ -50,11 +39,8 @@ def cv_loop(imgq):
             cv2.imshow('opencv window',retimg)
             cv2.waitKey(1)
     if cvshow:
-        print('tracker_test killed')
-        fd.write(b'kill cv win\n') ; fd.flush()
         cv2.destroyAllWindows()
         for _ in range(10): cv2.waitKey(1)
-    fd.close()
 
 if threaded:
     def proc_fun(imgq):
@@ -119,22 +105,26 @@ def main_loop(gworld):
         #img=cv2.resize(img,(640,480))
         #img=cv2.resize(ph.GetCvScreenshot(),(640,480))
         #img=None#img=ph.GetCvScreenshot()
-        direction=-1 if (cnt%cycle) > cycle/2 else 1
-        if cnt<cycle:
-            #import ipdb;ipdb.set_trace()
-            loc=ph.GetActorLocation(camera_actor)
-            ph.SetActorLocation(camera_actor,(direction*speed+loc[0],direction*speed+loc[1],loc[2]))
-            if img is None:
-                print('got None im')
-            else:
-                imgq.put(img)
-                if not threaded:
-                    next(cv_loop_itr)
-                #print('cnt=',cnt,direction,img.shape)
-                #if cnt<6:
-                #    import pdb;pdb.set_trace()
+        if cnt>cycle:
+            direction=0
+        elif (cnt%cycle) > cycle/2:
+            direction=-1
+        else:
+            direction=1
+            
+        #import ipdb;ipdb.set_trace()
+        loc=ph.GetActorLocation(camera_actor)
+        ph.SetActorLocation(camera_actor,(direction*speed+loc[0],direction*speed+loc[1],loc[2]))
+        if img is None:
+            print('got None im')
+        else:
+            imgq.put(img)
+            if not threaded:
+                next(cv_loop_itr)
+        print('cnt=',cnt,direction,img.shape,imgq.qsize())
+            #if cnt<6:
+            #    import pdb;pdb.set_trace()
         cnt+=1
-        print('---',time.time()-tic,imgq.qsize())
 
 def kill():
     global keep_running
@@ -148,6 +138,10 @@ def kill():
     else:
         imgq.put(None)
         print('---sending None')
-        time.sleep(0.5)
+        for _ in range(10):
+            if imgq.qsize()==0:
+                break
+            time.sleep(1)
+        time.sleep(1) 
         #proc.join()
         print('---Done kill')

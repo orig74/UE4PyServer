@@ -1,13 +1,14 @@
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
 import numpy as np
 import cv2
+import time
 
 class optical_flow_track(object):
     def __init__(self):
 
         # Parameters for lucas kanade optical flow
         self.lk_params = dict( winSize  = (15,15),
-                   maxLevel = 2,
+                   maxLevel = 1,
                    criteria = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 0.08))
 
         # Create some random colors
@@ -19,14 +20,15 @@ class optical_flow_track(object):
     def feed(self,frame):
         if self.old_gray is None:
             self.old_frame=frame
-            self.old_gray=cv2.cvtColor(self.old_frame, cv2.COLOR_BGR2GRAY)
+            #self.old_gray=cv2.cvtColor(self.old_frame, cv2.COLOR_BGR2GRAY)
+            self.old_gray=self.old_frame[:,:,0]
             marg=30
-            self.p0 = np.array([(i,j) for i in range(marg,frame.shape[1]-marg,30) for j in range(marg,frame.shape[0]-marg,30)],dtype='float32').reshape(-1,1,2)
-
+            self.p0 = np.array([(i,j) for i in range(marg,frame.shape[1]-marg,80) for j in range(marg,frame.shape[0]-marg,80)],dtype='float32').reshape(-1,1,2)
         #import ipdb;ipdb.set_trace()
-        frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        frame_gray = frame[:,:,0].copy()
+        tic=time.time()
         p1, st, err = cv2.calcOpticalFlowPyrLK(self.old_gray, frame_gray, self.p0, None, **self.lk_params)
-
+        #print('-------------------->',time.time()-tic)
         # Select good points
         good_new = p1[st==1]
         good_old = self.p0[st==1]
@@ -38,7 +40,7 @@ class optical_flow_track(object):
              frame = cv2.circle(frame,(a,b),2,self.color[i].tolist(),-1)
 
         # Now update the previous frame and previous points
-        self.old_gray = frame_gray.copy()
+        self.old_gray = frame_gray
         self.p0 = good_new.reshape(-1,1,2)
         return frame 
 
