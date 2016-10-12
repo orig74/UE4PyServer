@@ -82,34 +82,6 @@ void MoveToCameraActor(AActor* actor,ACameraActor* camera)
 	OurPlayerController->SetViewTarget(camera);
 }
 
-void RequestScreenshot(const char* fname,bool bInShowUI,bool bAddFilenameSuffix)
-{
-	FString filename(fname);
-	FScreenshotRequest::RequestScreenshot(filename, bInShowUI, bAddFilenameSuffix);
-
-}
-
-void RequestScreenshot2(UWorld* uworld,const char* fname)
-{
-	UGameViewportClient* gameViewport = uworld->GetGameViewport();
-	//UGameViewportClient* gameViewport = GEngine->GameViewport;
-	FViewport* InViewport = gameViewport->Viewport;
-	TArray<FColor> Bitmap;
-	FIntRect Rect(0, 0, InViewport->GetSizeXY().X, InViewport->GetSizeXY().Y);
-	bool bScreenshotSuccessful = GetViewportScreenShot(InViewport, Bitmap, Rect);
-	//bool bScreenshotSuccessful = (InViewport, Bitmap, Rect);
-	if (bScreenshotSuccessful){
-		FIntVector Size(InViewport->GetSizeXY().X, InViewport->GetSizeXY().Y, 0);
-		TArray<uint8> CompressedBitmap;
-		FString ScreenShotName(fname);
-		FImageUtils::CompressImageArray(Size.X, Size.Y, Bitmap, CompressedBitmap);
-		FFileHelper::SaveArrayToFile(CompressedBitmap, *ScreenShotName);
-	}
-	else {
-		UE_LOG(LogTemp, Warning, TEXT("bScreenshotSuccessful=False InViewport=%p"),reinterpret_cast<void*>(InViewport));
-	}
-
-}
 
 void GetViewPortSize(int out_sz[2])
 {
@@ -124,41 +96,12 @@ int TakeScreenshot(void* out_ptr,int length)
 	UGameViewportClient* gameViewport = GEngine->GameViewport;
 	FViewport* InViewport = gameViewport->Viewport;
 	TArray<FColor> Bitmap;
-	FIntRect Rect(0, 0, InViewport->GetSizeXY().X, InViewport->GetSizeXY().Y);
+	int sx=InViewport->GetSizeXY().X;
+	int sy=InViewport->GetSizeXY().Y;
+	FIntRect Rect(0, 0, sx, sy);
 	bool bScreenshotSuccessful = GetViewportScreenShot(InViewport, Bitmap, Rect);
 	if (bScreenshotSuccessful){
-		int sx=InViewport->GetSizeXY().X;
-		int sy=InViewport->GetSizeXY().Y;
-		TArray<uint8> CompressedBitmap;
-		FImageUtils::CompressImageArray(sx, sy, Bitmap, CompressedBitmap);
-		int cnt_non_zero=0;
-		check(CompressedBitmap.Num()<=length)
-	//	for(int i=0;i<CompressedBitmap.Num();i++) {
-	//		out_ptr[i]=CompressedBitmap[i];
-	//	}
-		memcpy(out_ptr,reinterpret_cast<void*>(CompressedBitmap.GetData()),CompressedBitmap.Num());
-		return CompressedBitmap.Num();
-
-	} else {
-		UE_LOG(LogTemp, Warning, TEXT("bScreenshotSuccessful=False InViewport=%p"),reinterpret_cast<void*>(InViewport));
-	}
-	return 0;
-}
-
-int TakeScreenshot2(void* out_ptr,int length)
-{
-	UGameViewportClient* gameViewport = GEngine->GameViewport;
-	FViewport* InViewport = gameViewport->Viewport;
-	TArray<FColor> Bitmap;
-	FIntRect Rect(0, 0, InViewport->GetSizeXY().X, InViewport->GetSizeXY().Y);
-	bool bScreenshotSuccessful = GetViewportScreenShot(InViewport, Bitmap, Rect);
-	if (bScreenshotSuccessful){
-		int sx=InViewport->GetSizeXY().X;
-		int sy=InViewport->GetSizeXY().Y;
-		check((Bitmap.Num()*4)<=length)
-	//	for(int i=0;i<CompressedBitmap.Num();i++) {
-	//		out_ptr[i]=CompressedBitmap[i];
-	//	}
+		check((Bitmap.Num()*4)<=length);
 		memcpy(out_ptr,reinterpret_cast<void*>(Bitmap.GetData()),Bitmap.Num()*4);
 		return Bitmap.Num();
 

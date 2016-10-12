@@ -111,7 +111,7 @@ def main_loop(gworld):
         cycle=400
         #ph.GetCvScreenshot()
         #img=cv2.resize(ph.GetCvScreenshot2(gworld),(640,480))
-        img=ph.TakeScreenshot2() 
+        img=ph.TakeScreenshot() 
         #img=None
         #continue
         #if cnt==0:

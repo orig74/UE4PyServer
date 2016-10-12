@@ -61,50 +61,14 @@ libc.MoveToCameraActor.argtypes=[c_void_p,c_void_p]
 def MoveToCameraActor(actor,camera):
     libc.MoveToCameraActor(actor,camera)
 
-libc.RequestScreenshot.argtypes=[c_char_p,c_bool,c_bool]
-def RequestScreenshot(fname='/tmp/screenshot.png',bInShowUI=False,bAddFilenameSuffix=False):
-    bfname=fname.encode('utf-8')
-    libc.RequestScreenshot(bfname,bInShowUI,bAddFilenameSuffix)    
-
-libc.RequestScreenshot2.argtypes=[c_void_p,c_char_p]
-def RequestScreenshot2(uworld,fname):
-    bfname=fname.encode('utf-8') 
-    libc.RequestScreenshot2(uworld,bfname)
-
-
-def GetCvScreenshot(fname='/tmp/screenshot.png',bInShowUI=False,bAddFilenameSuffix=False):
-    RequestScreenshot(fname,bInShowUI,bAddFilenameSuffix)
-    return cv2.imread(fname)
-
-def GetCvScreenshot2(uworld,fname='/tmp/screenshot.png'):
-    RequestScreenshot2(uworld,fname)
-    return cv2.imread(fname)
-
 int2type=c_int*2
 libc.GetViewPortSize.argtypes=[POINTER(int2type)]
 libc.TakeScreenshot.argtypes=[c_void_p,c_int]
-libc.TakeScreenshot2.argtypes=[c_void_p,c_int]
-#import numpy as np
-#tmp_capture_mem=b''
 import cv2
 import numpy as np
 tmp_capture_mem=np.array([1],dtype='uint8')
-def TakeScreenshot(decode=True):
-        global tmp_capture_mem
-        sz=int2type()
-        libc.GetViewPortSize(pointer(sz))
-        req_mem_sz=sz[0]*sz[1]*3+1000# (RGB)+header
-        if len(tmp_capture_mem)<req_mem_sz:
-            #tmp_capture_mem=b'\0'*req_mem_sz
-            tmp_capture_mem=np.zeros(req_mem_sz,'uint8')
-        ptr=tmp_capture_mem.ctypes.data_as(c_void_p)
-        lsize=libc.TakeScreenshot(ptr,len(tmp_capture_mem))
-        if decode:
-            return cv2.imdecode(tmp_capture_mem[:lsize],1) 
-        else:
-            return tmp_capture_mem[:lsize]
  
-def TakeScreenshot2(decode=True):
+def TakeScreenshot():
         global tmp_capture_mem
         sz=int2type()
         libc.GetViewPortSize(pointer(sz))
@@ -113,7 +77,7 @@ def TakeScreenshot2(decode=True):
             #tmp_capture_mem=b'\0'*req_mem_sz
             tmp_capture_mem=np.zeros(req_mem_sz,'uint8')
         ptr=tmp_capture_mem.ctypes.data_as(c_void_p)
-        lsize=libc.TakeScreenshot2(ptr,len(tmp_capture_mem))
+        lsize=libc.TakeScreenshot(ptr,len(tmp_capture_mem))
         return tmp_capture_mem.reshape((sz[1],sz[0],4))[:,:,:3] 
 
      
