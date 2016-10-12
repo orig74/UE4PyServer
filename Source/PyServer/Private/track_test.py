@@ -11,20 +11,22 @@ cvshow=True
 
 print('---- track_test imported ----')
 print('---- destroy cv windows ----')
-
+#cv2.destroyAllWindows()
+#for _ in range(5): cv2.waitKey(1)
 keep_running=True
 
 threaded=True
 if threaded:
-    import threading 
-    #import multiprocessing as mp
-    #imgq=mp.Queue()
-    
-from queue import Queue
-imgq=Queue()
+    #import threading 
+    import multiprocessing as mp
+    imgq=mp.Queue()
+else:    
+    from queue import Queue
+    imgq=Queue()
 
 def cv_loop(imgq):
     global keep_running
+    fd=open('/tmp/ori.txt','wb')
     of=optical_flow_track()
     if cvshow:
         cv2.destroyAllWindows()
@@ -34,9 +36,12 @@ def cv_loop(imgq):
         if imgq.empty():
             yield
             continue
+        fd.write(b'request img\n') ; fd.flush()
         img=imgq.get()
+        fd.write(b'got img\n') ; fd.flush()
         if img is None:
             print('got none in queue')
+            fd.write(b'got img None\n') ; fd.flush()
             break
         
         #retimg=img
@@ -46,37 +51,36 @@ def cv_loop(imgq):
             cv2.waitKey(1)
     if cvshow:
         print('tracker_test killed')
+        fd.write(b'kill cv win\n') ; fd.flush()
         cv2.destroyAllWindows()
         for _ in range(10): cv2.waitKey(1)
+    fd.close()
 
 if threaded:
-    class cv_loop_thread(threading.Thread):
-        def __init__(self,imgq):
-            threading.Thread.__init__(self)
-            self.imgq=imgq
+    def proc_fun(imgq):
+        cv_loop_itr=cv_loop(imgq)
+        while 1:
+            try:
+                next(cv_loop_itr)
+            except StopIteration:
+                break
+            time.sleep(0)  
 
-        def run(self):
-            myloop=cv_loop(self.imgq)
-            while 1:
-                try:
-                    next(myloop)
-                except StopIteration:
-                    break
-                time.sleep(0)
 
 cv_loop_itr=None
+proc=None
 
 def main_loop(gworld):
-    global cv_loop_itr
+    global cv_loop_itr,proc
     if not threaded:
         cv_loop_itr=cv_loop(imgq)
         next(cv_loop_itr)
     else:
         print('starting new thread')
         #ret=_thread.start_new_thread(cv_loop,())
-        cv_loop_thread(imgq).start()
-        #p=mp.Process(target=cv_loop,args=(imgq,))
-        #p.start()
+        #cv_loop_thread(imgq).start()
+        proc=mp.Process(target=proc_fun,args=(imgq,))
+        proc.start()
         print('after starting new thread')
 
  
@@ -101,13 +105,14 @@ def main_loop(gworld):
  
     while 1:
         #print('-------> main_loop',cnt)
+        tic=time.time()
         yield
         speed=2.0
         cycle=400
         #ph.GetCvScreenshot()
         #img=cv2.resize(ph.GetCvScreenshot2(gworld),(640,480))
-        tic=time.clock()
-        img=ph.TakeScreenshot() 
+        img=ph.TakeScreenshot2() 
+        #img=None
         #continue
         #if cnt==0:
         #    import ipdb;ipdb.set_trace()
@@ -129,7 +134,7 @@ def main_loop(gworld):
                 #if cnt<6:
                 #    import pdb;pdb.set_trace()
         cnt+=1
-        print('---',time.clock()-tic,imgq.qsize())
+        print('---',time.time()-tic,imgq.qsize())
 
 def kill():
     global keep_running
@@ -140,3 +145,9 @@ def kill():
                 next(cv_loop_itr) 
         except StopIteration:
             pass
+    else:
+        imgq.put(None)
+        print('---sending None')
+        time.sleep(0.5)
+        #proc.join()
+        print('---Done kill')

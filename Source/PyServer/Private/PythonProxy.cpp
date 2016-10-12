@@ -103,7 +103,7 @@ void PythonButtonClicked()
 {
 	PYRUN("import pyinit;import imp;imp.reload(pyinit)");
 	char tmpstr[1024];
-	sprintf(tmpstr,"PyInit('%p')",reinterpret_cast<void*>(GWorld->GetWorld()));
+	sprintf(tmpstr,"pyinit.PyInit('%p')",reinterpret_cast<void*>(GWorld->GetWorld()));
 	PYRUN(tmpstr);	
 
 	//UGameViewportClient* ViewportClient = GWorld->GetGameViewport();
