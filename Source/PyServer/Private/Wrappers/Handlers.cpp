@@ -1,6 +1,8 @@
 
 #include "PyServerPrivatePCH.h"
 #include "Engine.h"
+#include "Runtime/Engine/Classes/Components/WindDirectionalSourceComponent.h"
+#include "Runtime/Engine/Classes/Engine/WindDirectionalSource.h"
 
 extern "C"{
 void* StrToPtr(const char* str)
@@ -111,7 +113,23 @@ int TakeScreenshot(void* out_ptr,int length)
 	return 0;
 }
 
+void SetWindParams(AWindDirectionalSource* awind,float speed,float strength)
+{
+	UWindDirectionalSourceComponent* windcomp=awind->GetComponent();
+	windcomp->Speed=speed;	
+	windcomp->Strength=strength;	
+	//FWindSourceSceneProxy * sceneProxy=windcomp->CreateSceneProxy();
+}
 
+void DeactivateActorComponent(UActorComponent* actor)
+{
+	actor->Deactivate();
+}
+void ActivateActorComponent(UActorComponent* actor,bool reset)
+{
+	actor->Activate(reset);
+	actor->BeginPlay();
+}
 
 
 void SetScreenResolution(int x,int y)

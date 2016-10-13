@@ -80,7 +80,21 @@ def TakeScreenshot():
         lsize=libc.TakeScreenshot(ptr,len(tmp_capture_mem))
         return tmp_capture_mem.reshape((sz[1],sz[0],4))[:,:,:3] 
 
-     
+libc.SetWindParams.argtypes=[c_void_p,c_float,c_float]
+
+#BUG!! does not work 
+def SetWindParams(awind,speed): 
+    libc.SetWindParams(awind,speed,speed)
+
+libc.DeactivateActorComponent.argtypes=[c_void_p]
+def DeactivateActor(actor):
+    libc.DeactivateActorComponent(actor)
+
+
+libc.ActivateActorComponent.argtypes=[c_void_p,c_bool]
+def ActivateActor(actor):
+    libc.ActivateActorComponent(actor,False)
+
 
 libc.SetScreenResolution.argtypes=[c_int,c_int]
 def SetScreenResolution(x,y):

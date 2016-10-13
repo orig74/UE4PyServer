@@ -23,7 +23,7 @@ class optical_flow_track(object):
             #self.old_gray=cv2.cvtColor(self.old_frame, cv2.COLOR_BGR2GRAY)
             self.old_gray=self.old_frame[:,:,2]
             marg=30
-            self.p0 = np.array([(i,j) for i in range(marg,frame.shape[1]-marg,80) for j in range(marg,frame.shape[0]-marg,80)],dtype='float32').reshape(-1,1,2)
+            self.p0 = np.array([(i,j) for i in range(marg,frame.shape[1]-marg,40) for j in range(marg,frame.shape[0]-marg,40)],dtype='float32').reshape(-1,1,2)
         #import ipdb;ipdb.set_trace()
         frame_gray = frame[:,:,2].copy()
         #frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
