@@ -11,13 +11,8 @@ cvshow=True
 
 keep_running=True
 
-threaded=True
-if threaded:
-    import multiprocessing as mp
-    imgq=mp.Queue()
-else:    
-    from queue import Queue
-    imgq=Queue()
+from queue import Queue
+imgq=Queue()
 
 def cv_loop(imgq):
     global keep_running
@@ -37,23 +32,13 @@ def cv_loop(imgq):
             continue
         
         #retimg=img
-        retimg=of.feed(img)
+        retimg=of.feed(img.copy())
         if cvshow:
             cv2.imshow('opencv window',retimg)
             cv2.waitKey(1)
     if cvshow:
         cv2.destroyAllWindows()
         for _ in range(10): cv2.waitKey(1)
-
-if threaded:
-    def proc_fun(imgq):
-        cv_loop_itr=cv_loop(imgq)
-        while 1:
-            try:
-                next(cv_loop_itr)
-            except StopIteration:
-                break
-            time.sleep(0)  
 
 
 cv_loop_itr=None
@@ -88,22 +73,10 @@ case_params_list=[case_params1,case_params2,case_params3,case_params4]
 def main_loop(gworld):
     global cv_loop_itr,proc
     
-    if not threaded:
-        cv_loop_itr=cv_loop(imgq)
-        next(cv_loop_itr)
-    else:
-        print('starting new thread')
-        #ret=_thread.start_new_thread(cv_loop,())
-        #cv_loop_thread(imgq).start()
-        proc=mp.Process(target=proc_fun,args=(imgq,))
-        proc.start()
-        print('after starting new thread')
-
-    
-
+    cv_loop_itr=cv_loop(imgq)
+    next(cv_loop_itr)
  
     print('-------> start main_loop 2')
-    #cv2.destroyAllWindows()
     camera_actor=ph.FindActorByName(gworld,'CameraActor_2',1) 
     if camera_actor is None:
         print('could not find CameraActor_2 yeilding forever')
@@ -116,11 +89,6 @@ def main_loop(gworld):
             camera_initial_location=(-370-1000,-2920,case_params['camera_height']*100) #centimeters
             ph.SetActorLocation(camera_actor,camera_initial_location)
             ph.SetActorRotation(camera_actor,(-0,-180,-0))
-            
-            #if 1:
-            #    ph.ActivateActor(wind_actor)
-            #else:
-            #    ph.DeactivateActor(wind_actor)
             ph.SetWindParams(wind_actor,case_params['wind_speed'])
             
             #move wind actor otherwize change wind speed doesn't work (https://answers.unrealengine.com/questions/35478/possible-to-change-wind-strength-in-level-blueprin.html)    
@@ -130,9 +98,8 @@ def main_loop(gworld):
             ph.MoveToCameraActor(tick_actor,camera_actor)
             
             imgq.put('reset')
-            #ph.SetScreenResolution(640,480)
 
-            for _ in range(100): #adjustment frames...
+            for _ in range(300): #adjustment frames...
                 yield
             for cnt in range(case_params['iteration_frame_cnt']):
                 tic=time.time()
