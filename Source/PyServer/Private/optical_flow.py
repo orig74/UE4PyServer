@@ -22,8 +22,9 @@ class optical_flow_track(object):
             self.old_frame=frame
             #self.old_gray=cv2.cvtColor(self.old_frame, cv2.COLOR_BGR2GRAY)
             self.old_gray=self.old_frame[:,:,2]
-            marg=30
-            self.p0 = np.array([(i,j) for i in range(marg,frame.shape[1]-marg,40) for j in range(marg,frame.shape[0]-marg,40)],dtype='float32').reshape(-1,1,2)
+            margx=120
+            margy=30
+            self.p0 = np.array([(i,j) for i in range(margx,frame.shape[1]-margx,30) for j in range(margy,frame.shape[0]-margy,30)],dtype='float32').reshape(-1,1,2)
         #import ipdb;ipdb.set_trace()
         frame_gray = frame[:,:,2].copy()
         #frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -33,6 +34,7 @@ class optical_flow_track(object):
         # Select good points
         good_new = p1[st==1]
         good_old = self.p0[st==1]
+        self.color=self.color[(st==1).flatten()]
 
         # draw the tracks
         for i,(new,old) in enumerate(zip(good_new,good_old)):

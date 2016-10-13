@@ -17,7 +17,7 @@ case_params1={\
 'name':'nowind_low',
 'camera_height': 5,
 'wind_speed':0.00,
-'iterations':1,
+'iterations':2,
 'iteration_frame_cnt': 500,
 'camera_speed':2,
 'frames_in_cycle':400,
@@ -35,10 +35,10 @@ case_params4=case_params2.copy()
 case_params4['name']='wind_heigh'
 case_params4['camera_height']=13
 
-#case_params_list=[case_params1,case_params2,case_params3,case_params4]
-case_params_list=[case_params1]
+case_params_list=[case_params1,case_params3,case_params4,case_params2]
+#case_params_list=[case_params1]
 
-save_path='/tmp/out_ue4'
+save_path='/local/tmp/out_ue4'
 
 
 from queue import Queue
@@ -67,6 +67,7 @@ def cv_loop(imgq):
                 img_cnt=0
             if img.startswith('init'):
                 save_data_path=img.split(',')[1]
+                of=optical_flow_track()
                 img_cnt=0
             if img.startswith('save_last'):
                 cv2.imwrite(save_data_path+'/last.png',retimg)
