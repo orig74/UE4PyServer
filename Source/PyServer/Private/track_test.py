@@ -14,7 +14,7 @@ keep_running=True
 
 
 case_params1={\
-'name':'nowind_low',
+'name':'low_wind_low_alt',
 'camera_height': 5,
 'wind_speed':0.00,
 'iterations':2,
@@ -24,15 +24,15 @@ case_params1={\
 }
 
 case_params2=case_params1.copy()
-case_params2['name']='wind_low'
+case_params2['name']='high_wind_low_alt'
 case_params2['wind_speed']=0.1
 
 case_params3=case_params1.copy()
-case_params3['name']='nowind_heigh'
+case_params3['name']='low_wind_high_alt'
 case_params3['camera_height']=13
 
 case_params4=case_params2.copy()
-case_params4['name']='wind_heigh'
+case_params4['name']='high_wind_high_alt'
 case_params4['camera_height']=13
 
 case_params_list=[case_params1,case_params3,case_params4,case_params2]
@@ -71,6 +71,7 @@ def cv_loop(imgq):
                 img_cnt=0
             if img.startswith('save_last'):
                 cv2.imwrite(save_data_path+'/last.png',retimg)
+                of.save_final_state(save_data_path)
             continue
             #retimg=img
         retimg=of.feed(img.copy())
