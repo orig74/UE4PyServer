@@ -109,10 +109,10 @@ void PythonButtonClicked()
 	//UGameViewportClient* ViewportClient = GWorld->GetGameViewport();
 	//FViewport* InViewport = ViewportClient->Viewport;
 	//FIntVector Size(InViewport->GetSizeXY().X, InViewport->GetSizeXY().Y, 0);
-	{
-		FString filename = "/tmp/test.png";
-		FScreenshotRequest::RequestScreenshot(filename, false, false);
-	}
+	//{
+	//	FString filename = "/tmp/test.png";
+	//	FScreenshotRequest::RequestScreenshot(filename, false, false);
+	//}
 
 	//myActor1=NewObject<APyServerTickActor>();
 

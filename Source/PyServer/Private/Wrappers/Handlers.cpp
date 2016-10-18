@@ -96,19 +96,22 @@ void GetViewPortSize(int out_sz[2])
 int TakeScreenshot(void* out_ptr,int length)
 {
 	UGameViewportClient* gameViewport = GEngine->GameViewport;
-	FViewport* InViewport = gameViewport->Viewport;
-	TArray<FColor> Bitmap;
-	int sx=InViewport->GetSizeXY().X;
-	int sy=InViewport->GetSizeXY().Y;
-	FIntRect Rect(0, 0, sx, sy);
-	bool bScreenshotSuccessful = GetViewportScreenShot(InViewport, Bitmap, Rect);
-	if (bScreenshotSuccessful){
-		check((Bitmap.Num()*4)<=length);
-		memcpy(out_ptr,reinterpret_cast<void*>(Bitmap.GetData()),Bitmap.Num()*4);
-		return Bitmap.Num();
+	{
+		FViewport* InViewport = gameViewport->Viewport;
+		TArray<FColor> Bitmap;
+		int sx=InViewport->GetSizeXY().X;
+		int sy=InViewport->GetSizeXY().Y;
+		FIntRect Rect(0, 0, sx, sy);
+		bool bScreenshotSuccessful = GetViewportScreenShot(InViewport, Bitmap, Rect);
+		if (bScreenshotSuccessful){
+			check((Bitmap.Num()*4)<=length);
+			memcpy(out_ptr,reinterpret_cast<void*>(Bitmap.GetData()),Bitmap.Num()*4);
+			UE_LOG(LogTemp, Warning, TEXT("bScreenshotSuccessful=True InViewport=%p Bitmap.Num()=%d"),reinterpret_cast<void*>(InViewport),Bitmap.Num());
+			return Bitmap.Num();
 
-	} else {
-		UE_LOG(LogTemp, Warning, TEXT("bScreenshotSuccessful=False InViewport=%p"),reinterpret_cast<void*>(InViewport));
+		} else {
+			UE_LOG(LogTemp, Warning, TEXT("bScreenshotSuccessful=False InViewport=%p"),reinterpret_cast<void*>(InViewport));
+		}
 	}
 	return 0;
 }

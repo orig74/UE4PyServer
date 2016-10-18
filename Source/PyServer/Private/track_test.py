@@ -1,6 +1,7 @@
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
 from Wrappers import phandlers as ph
 import time
+import traceback,sys
 import os,shutil
 import cv2,imp
 import optical_flow
@@ -74,7 +75,12 @@ def cv_loop(imgq):
                 of.save_final_state(save_data_path)
             continue
             #retimg=img
-        retimg=of.feed(img.copy())
+        try:
+            retimg=of.feed(img.copy())
+        except:
+            if img_cnt%50==0:
+                print('-'*60)
+                traceback.print_exc(file=sys.stdout)
         if save_data_path is not None and img_cnt==0: #write first image to disk
             cv2.imwrite(save_data_path+'/first.png',retimg)
         if cvshow:
@@ -133,8 +139,8 @@ def main_loop(gworld):
             for _ in range(300): #adjustment frames...
                 yield
             for cnt in range(case_params['iteration_frame_cnt']):
-                tic=time.time()
                 yield
+                tic=time.time()
                 speed=case_params['camera_speed']
                 cycle=case_params['frames_in_cycle']
                 img=ph.TakeScreenshot() 
@@ -152,7 +158,7 @@ def main_loop(gworld):
                 else:
                     imgq.put(img)
                     next(cv_loop_itr)
-                print('case:',case_params['name'],'iter=',interation_num,r'cnt=',cnt,direction,img.shape,imgq.qsize())
+                print('case:',case_params['name'],'iter=',interation_num,r'cnt=',cnt,direction,img.shape,imgq.qsize(),(time.time()-tic)*100,'ms')
             if save_path is not None:
                 print('---saving last----')
                 imgq.put('save_last')
