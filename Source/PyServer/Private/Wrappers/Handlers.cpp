@@ -106,7 +106,7 @@ int TakeScreenshot(void* out_ptr,int length)
 		if (bScreenshotSuccessful){
 			check((Bitmap.Num()*4)<=length);
 			memcpy(out_ptr,reinterpret_cast<void*>(Bitmap.GetData()),Bitmap.Num()*4);
-			UE_LOG(LogTemp, Warning, TEXT("bScreenshotSuccessful=True InViewport=%p Bitmap.Num()=%d"),reinterpret_cast<void*>(InViewport),Bitmap.Num());
+			//UE_LOG(LogTemp, Warning, TEXT("bScreenshotSuccessful=True InViewport=%p Bitmap.Num()=%d"),reinterpret_cast<void*>(InViewport),Bitmap.Num());
 			return Bitmap.Num();
 
 		} else {
