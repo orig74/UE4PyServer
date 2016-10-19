@@ -70,12 +70,17 @@ void SetActorLocation(AActor* actor,float* invec)
 void GetActorRotation(AActor* actor,float* outvec)
 {
 	FRotator rot=actor->GetActorRotation();
-	outvec[0]=rot.Pitch;outvec[1]=rot.Yaw;outvec[2]=rot.Roll;
+	//outvec[0]=rot.Pitch;outvec[1]=rot.Yaw;outvec[2]=rot.Roll;
+	outvec[0]=rot.Roll;outvec[1]=rot.Pitch;outvec[2]=rot.Yaw;
 }
 
 void SetActorRotation(AActor* actor,float* invec)
 {
-	actor->SetActorRotation(FRotator(invec[0],invec[1],invec[2]));
+	FRotator rot;
+	rot.Roll=invec[0];
+	rot.Pitch=invec[1];
+	rot.Yaw=invec[2];
+	actor->SetActorRotation(rot);
 }
 
 void MoveToCameraActor(AActor* actor,ACameraActor* camera)

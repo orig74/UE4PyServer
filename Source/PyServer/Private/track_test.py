@@ -6,6 +6,7 @@ import os,shutil
 import cv2,imp
 import optical_flow
 from optical_flow import optical_flow_track
+import numpy as np
 
 imp.reload(optical_flow)
 
@@ -117,9 +118,11 @@ def main_loop(gworld):
             case_path=save_path+'/'+case_params['name']
             os.mkdir(case_path)
         for interation_num in range(case_params['iterations']): 
-            camera_initial_location=(-370-1000,-2920,case_params['camera_height']*100) #centimeters
+            #camera_initial_location=(-370-1000,-2920,case_params['camera_height']*100) #centimeters
+            camera_initial_location=ph.GetActorLocation(camera_actor)
             ph.SetActorLocation(camera_actor,camera_initial_location)
-            ph.SetActorRotation(camera_actor,(-0,-180,-0))
+            camera_initial_rot=ph.GetActorRotation(camera_actor)
+            ph.SetActorRotation(camera_actor,camera_initial_rot)
             ph.SetWindParams(wind_actor,case_params['wind_speed'])
             
             #move wind actor otherwize change wind speed doesn't work (https://answers.unrealengine.com/questions/35478/possible-to-change-wind-strength-in-level-blueprin.html)    
@@ -145,14 +148,22 @@ def main_loop(gworld):
                 cycle=case_params['frames_in_cycle']
                 img=ph.TakeScreenshot() 
                 #img=cv2.resize(img,(640,480))
+                dirx=np.cos(np.radians(camera_initial_rot[2]))
+
+                diry=np.sin(np.radians(camera_initial_rot[2]))
+
+
+
                 if cnt>=cycle:
                     direction=0
                 elif (cnt%cycle) >= cycle/2:
-                    direction=-1
-                else:
                     direction=1
+                else:
+                    direction=-1
+                print("--->",dirx,diry,direction,camera_initial_rot)
+
                 loc=ph.GetActorLocation(camera_actor)
-                ph.SetActorLocation(camera_actor,(direction*speed+loc[0],direction*speed+loc[1],loc[2]))
+                ph.SetActorLocation(camera_actor,(direction*dirx*speed+loc[0],direction*diry*speed+loc[1],loc[2]))
                 if img is None:
                     print('got None im')
                 else:
