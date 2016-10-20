@@ -1,7 +1,14 @@
 # UE4PyServer
-<h3>Unreal Engine Python Plugin</h3>
+<h2>Unreal Engine Python Plugin</h2>
 
-<h4>Installation: (For now Linux Only)</h4><br/>
+<h3>Installation: (For now Linux Only)</h3><br/>
+<h4>Prerequisits</h4>
+- Unreal Engine for linux installation:  <a href="https://wiki.unrealengine.com/Building_On_Linux">UE4</a><br/>
+- Python 3.x installation<br/>
+<h4>Prerequisits For Otical-Flow Demo</h4>
+- OpenCv for Python 3<br/>
+- numpy<br/>
+<h4>Plugin Setup</h4>
 - Create a project in unreal engine:<br/>
 - Add an empty c++ class so the project will be a code project<br/>
 - Close the project<br/>
