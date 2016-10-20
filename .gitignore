@@ -4,3 +4,4 @@ Intermediate
 *.swp
 Source/PyServer/run.sh
 Source/PyServer/Private/entry_point.py
+Source/PyServer/Private/PyConfig.h
