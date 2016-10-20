@@ -36,7 +36,9 @@ Press the Plugin button PyServer.  PyServerTickActor will apear in the Outliner 
 - Play:<br/>
 Press the play button in Play button in the Toolbar. The supporting mode are:  "Selected ViewPort"  and "New Editor Window" <br/>
 Focus on the engine window to get 30 fps!!<br/>
+Watch demo on: <a href="https://youtu.be/ydBFlI_fhso">demo</a>
+
 <object data="https://youtu.be/ydBFlI_fhso"
    width="560" height="315"></object>
-   <iframe src="https://youtu.be/ydBFlI_fhso"
+<iframe src="https://youtu.be/ydBFlI_fhso"
    width="560" height="315" frameborder="0" allowfullscreen></iframe>
