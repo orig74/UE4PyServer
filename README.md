@@ -27,7 +27,7 @@ python config.py --entry_point track_test
 python build.py --engine-path=<<unreal engine dir PATH>><br/>
 
 <h4>Running minimal example:</h4>
-- Set entry point for the minimal file
+- Set entry point for the minimal file<br/>
 python config.py --entry_point minimal<br/>
 the minimal file is minimal.py<br/>
 - Add "PyServerTickActor":<br/>
