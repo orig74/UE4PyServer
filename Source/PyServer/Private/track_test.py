@@ -17,7 +17,7 @@ keep_running=True
 
 case_params1={\
 'name':'low_wind_low_alt',
-'camera_height': 5,
+'camera_height': 0,
 'wind_speed':0.00,
 'iterations':2,
 'iteration_frame_cnt': 500,
@@ -31,16 +31,16 @@ case_params2['wind_speed']=0.1
 
 case_params3=case_params1.copy()
 case_params3['name']='low_wind_high_alt'
-case_params3['camera_height']=13
+case_params3['camera_height']=8
 
 case_params4=case_params2.copy()
 case_params4['name']='high_wind_high_alt'
-case_params4['camera_height']=13
+case_params4['camera_height']=8
 
 case_params_list=[case_params1,case_params3,case_params4,case_params2]
 #case_params_list=[case_params1]
 
-save_path='/local/tmp/out_ue4'
+save_path='/tmp/out_ue4'
 
 
 from queue import Queue
@@ -113,15 +113,16 @@ def main_loop(gworld):
             yield
     tick_actor=ph.FindActorByName(gworld,'PyServerTickActor_0')
     wind_actor=ph.FindActorByName(gworld,'WindDirectionalSource1') 
+    camera_initial_location=ph.GetActorLocation(camera_actor)
+    camera_initial_rot=ph.GetActorRotation(camera_actor)
+    
     for case_params in case_params_list:
         if save_path is not None:
             case_path=save_path+'/'+case_params['name']
             os.mkdir(case_path)
         for interation_num in range(case_params['iterations']): 
             #camera_initial_location=(-370-1000,-2920,case_params['camera_height']*100) #centimeters
-            camera_initial_location=ph.GetActorLocation(camera_actor)
             ph.SetActorLocation(camera_actor,camera_initial_location)
-            camera_initial_rot=ph.GetActorRotation(camera_actor)
             ph.SetActorRotation(camera_actor,camera_initial_rot)
             ph.SetWindParams(wind_actor,case_params['wind_speed'])
             
@@ -142,11 +143,9 @@ def main_loop(gworld):
             for _ in range(300): #adjustment frames...
                 yield
             for cnt in range(case_params['iteration_frame_cnt']):
-                yield
                 tic=time.time()
                 speed=case_params['camera_speed']
                 cycle=case_params['frames_in_cycle']
-                img=ph.TakeScreenshot() 
                 #img=cv2.resize(img,(640,480))
                 dirx=np.cos(np.radians(camera_initial_rot[2]))
 
@@ -160,10 +159,11 @@ def main_loop(gworld):
                     direction=1
                 else:
                     direction=-1
-                print("--->",dirx,diry,direction,camera_initial_rot)
 
                 loc=ph.GetActorLocation(camera_actor)
-                ph.SetActorLocation(camera_actor,(direction*dirx*speed+loc[0],direction*diry*speed+loc[1],loc[2]))
+                ph.SetActorLocation(camera_actor,(direction*dirx*speed+loc[0],direction*diry*speed+loc[1],camera_initial_location[2]+case_params['camera_height']*100))
+                yield
+                img=ph.TakeScreenshot() 
                 if img is None:
                     print('got None im')
                 else:
