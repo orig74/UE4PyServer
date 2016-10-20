@@ -38,7 +38,6 @@ Press the play button in Play button in the Toolbar. The supporting mode are:  "
 Focus on the engine window to get 30 fps!!<br/>
 Watch demo on: <a href="https://youtu.be/ydBFlI_fhso">demo</a>
 
-<object data="https://youtu.be/ydBFlI_fhso"
-   width="560" height="315"></object>
-<iframe src="https://youtu.be/ydBFlI_fhso"
-   width="560" height="315" frameborder="0" allowfullscreen></iframe>
+<h4>Limitations:</h4>
+For now, the demo can only run in the Editor mode, so it right for research but not much useful for game development. The reason for that is that the screen capture is done outside the Draw function of the FViewPort Class. 
+
