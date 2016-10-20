@@ -33,3 +33,6 @@ In the Modes Pannel in the Place Tab add a Camera Actor. Change The name of the 
 In the Modes Pannel in the Place Tab add a WindDirectionalSource. Change The name to "WindDirectionalSource1"<br/>
 - Add "PyServerTickActor":<br/>
 Press the Plugin button PyServer.  PyServerTickActor will apear in the Outliner pannel in the right.<br/>
+- Play<br/>
+Press the play button in Play button in the Toolbar. The supporting mode are:  "Selected ViewPort"  and "New Editor Window" <br/>
+
