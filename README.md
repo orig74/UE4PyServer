@@ -26,6 +26,15 @@ python config.py --entry_point track_test
 - run:<br/>
 python build.py --engine-path=<<unreal engine dir PATH>><br/>
 
+<h4>Running minimal example:</h4>
+- Set entry point for the minimal file
+python config.py --entry_point minimal<br/>
+the minimal file is minimal.py<br/>
+- Add "PyServerTickActor":<br/>
+Press the Plugin button PyServer.  PyServerTickActor will apear in the Outliner pannel in the right.<br/>
+- Play:<br/>
+Press the play button in Play button in the Toolbar. The supporting mode are:  "Selected ViewPort"  and "New Editor Window" 
+
 <h4>Running The Demo:</h4>
 The demo is "Lucas-Kanade optical flow tracking" from OpenCV library. <br/>
 - Add Camera CameraActor_2  and a WindDirectionalSource:<br/>
