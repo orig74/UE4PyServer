@@ -20,11 +20,20 @@ conda install numpy
 git clone  https://github.com/orig74/UE4PyServer.git<br/>
 - cd to:  [ProjectPath]/Plugins/UE4PyServer/Source/PyServer<br/>
 - run: <br/>
-python config.py --entry_point <your entry point><br/>
+python config.py --entry_point \<your entry point\><br/>
 for the test demo run:<br/>
 python config.py --entry_point track_test
 - run:<br/>
-python build.py --engine-path=<<unreal engine dir PATH>><br/>
+python build.py --engine-path=\<unreal engine dir PATH\><br/>
+
+<h4>Running minimal example:</h4>
+- Set entry point for the minimal file<br/>
+python config.py --entry_point minimal<br/>
+the minimal file is minimal.py<br/>
+- Add "PyServerTickActor":<br/>
+Press the Plugin button PyServer.  PyServerTickActor will apear in the Outliner pannel in the right.<br/>
+- Play:<br/>
+Press the play button in Play button in the Toolbar. The supporting mode are:  "Selected ViewPort"  and "New Editor Window" 
 
 <h4>Running The Demo:</h4>
 The demo is "Lucas-Kanade optical flow tracking" from OpenCV library. <br/>
