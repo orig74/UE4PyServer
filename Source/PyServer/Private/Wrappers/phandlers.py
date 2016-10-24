@@ -57,9 +57,9 @@ def SetActorRotation(actor,invec):
     libc.SetActorRotation(actor,vec)
 
 
-libc.MoveToCameraActor.argtypes=[c_void_p,c_void_p]
-def MoveToCameraActor(actor,camera):
-    libc.MoveToCameraActor(actor,camera)
+libc.MoveToCameraActor.argtypes=[c_void_p,c_void_p,c_int]
+def MoveToCameraActor(actor,camera,index=0):
+    libc.MoveToCameraActor(actor,camera,index)
 
 int2type=c_int*2
 libc.GetViewPortSize.argtypes=[POINTER(int2type)]
@@ -96,6 +96,20 @@ def ActivateActor(actor):
     libc.ActivateActorComponent(actor,False)
 
 
-libc.SetScreenResolution.argtypes=[c_int,c_int]
-def SetScreenResolution(x,y):
-    libc.SetScreenResolution(x,y)
+libc.GetTextureSize.argtypes=[POINTER(int2type),c_int,c_bool]
+libc.GetTexture.argtypes=[c_void_p,c_int,c_int,c_bool]
+def GetTextureImg(txt_index=0,verbose=0):
+        global tmp_capture_mem
+        sz=int2type()
+        ret=libc.GetTextureSize(pointer(sz),txt_index,verbose)
+        req_mem_sz=sz[0]*sz[1]*4# (RGBA)
+        
+        if len(tmp_capture_mem)<req_mem_sz:
+            tmp_capture_mem=np.zeros(req_mem_sz,'uint8')
+        ptr=tmp_capture_mem.ctypes.data_as(c_void_p)
+        libc.GetTexture(ptr,req_mem_sz,txt_index,0)
+        return tmp_capture_mem.reshape((sz[1],sz[0],4))[:,:,:3] 
+
+
+
+

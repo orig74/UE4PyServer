@@ -83,9 +83,9 @@ void SetActorRotation(AActor* actor,float* invec)
 	actor->SetActorRotation(rot);
 }
 
-void MoveToCameraActor(AActor* actor,ACameraActor* camera)
+void MoveToCameraActor(AActor* actor,ACameraActor* camera,int PlayerIndex)
 {
-	APlayerController* OurPlayerController = UGameplayStatics::GetPlayerController(actor,0);
+	APlayerController* OurPlayerController = UGameplayStatics::GetPlayerController(actor,PlayerIndex);
 	OurPlayerController->SetViewTarget(camera);
 }
 
@@ -140,17 +140,54 @@ void ActivateActorComponent(UActorComponent* actor,bool reset)
 }
 
 
-void SetScreenResolution(int x,int y)
+int GetTextureSize(int out_sz[2],int index,int verbose)
 {
-	//UGameUserSettings* UserSettingsObj = GEngine->GetGameUserSettings();
-	//UserSettingsObj->SetScreenResolution(FIntPoint(x,y));
-	UGameViewportClient* gameViewport = GEngine->GameViewport;
-	//UGameViewportClient* gameViewport = GEngine->GameViewport;
-	FViewport* InViewport = gameViewport->Viewport;
-	FViewportFrame* ViewportFrame=InViewport->GetViewportFrame();
-	ViewportFrame->ResizeFrame(640,480,EWindowMode::Windowed);
+	int cnt=0;
+	for ( TObjectIterator<UTextureRenderTarget2D> Itr; Itr ; ++Itr)
+	{
+		if(cnt==index)
+		{
+			UTextureRenderTarget2D *TextureRenderTarget = *Itr;
+			int sx=TextureRenderTarget->SizeX,sy=TextureRenderTarget->SizeY;
+			out_sz[0]=sx;
+			out_sz[1]=sy;
+			if(verbose) UE_LOG(LogTemp, Warning, TEXT("Found texture!!"));
+			return sx*sy;
+		}	
+		cnt++;
+	}
+	return 0;
+	
+}
+
+int GetTexture(void* out_ptr,int length,int index,int verbose)
+{
+	int cnt=0;
+	for ( TObjectIterator<UTextureRenderTarget2D> Itr; Itr ; ++Itr)
+	{
+		// Access the subclass instance with the * or -> operators.
+		if(cnt==index)
+		{
+			UTextureRenderTarget2D *TextureRenderTarget = *Itr;
+			int sx=TextureRenderTarget->SizeX,sy=TextureRenderTarget->SizeY;
+			if(verbose) UE_LOG(LogTemp, Warning, TEXT("Found texture!!"));
+			UTexture2D *Texture = UTexture2D::CreateTransient(sx,sy, PF_B8G8R8A8);
+			Texture->SRGB = TextureRenderTarget->SRGB;
+			TArray<FColor> SurfData;
+			FRenderTarget *RenderTarget = TextureRenderTarget->GameThread_GetRenderTargetResource();
+			check((sx*sy*4)<=length);
+			RenderTarget->ReadPixels(SurfData);
+			memcpy(out_ptr,reinterpret_cast<void*>(SurfData.GetData()),sx*sy*4);
+			return sx*sy*4;
+		}
+		cnt++;
+	}
+	return 0;
 
 }
+
+
+
 
 
 } //extern "C"
