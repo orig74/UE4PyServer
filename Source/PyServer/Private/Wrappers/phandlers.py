@@ -98,7 +98,7 @@ def ActivateActor(actor):
 
 libc.GetTextureSize.argtypes=[POINTER(int2type),c_int,c_bool]
 libc.GetTexture.argtypes=[c_void_p,c_int,c_int,c_bool]
-def GetTextureImg(txt_index=0,verbose=0):
+def GetTextureImg(txt_index=0,verbose=0,channels=[0,1,2]):
         global tmp_capture_mem
         sz=int2type()
         ret=libc.GetTextureSize(pointer(sz),txt_index,verbose)
@@ -108,7 +108,14 @@ def GetTextureImg(txt_index=0,verbose=0):
             tmp_capture_mem=np.zeros(req_mem_sz,'uint8')
         ptr=tmp_capture_mem.ctypes.data_as(c_void_p)
         libc.GetTexture(ptr,req_mem_sz,txt_index,0)
-        return tmp_capture_mem.reshape((sz[1],sz[0],4))[:,:,:3] 
+        return tmp_capture_mem[:req_mem_sz].reshape((sz[1],sz[0],4))[:,:,channels] 
+
+libc.GetSceneCapture2DFrustrum.argtypes=[c_void_p,POINTER(c_float),POINTER(c_float)]
+def GetSceneCapture2DNearFar(actor):
+    near=c_float(-1)
+    far=c_float(-1)
+    libc.GetSceneCapture2DFrustrum(actor,pointer(near),pointer(far))
+    return near.value,far.value
 
 
 

@@ -140,6 +140,13 @@ void ActivateActorComponent(UActorComponent* actor,bool reset)
 }
 
 
+void GetSceneCapture2DFrustrum(ASceneCapture2D* actor,float* near,float* far)
+{
+	UDrawFrustumComponent *frustum=actor->GetDrawFrustum();
+	*near=frustum->MinDrawDistance;
+	*far=frustum->LDMaxDrawDistance;	
+}
+
 int GetTextureSize(int out_sz[2],int index,int verbose)
 {
 	int cnt=0;
@@ -151,7 +158,7 @@ int GetTextureSize(int out_sz[2],int index,int verbose)
 			int sx=TextureRenderTarget->SizeX,sy=TextureRenderTarget->SizeY;
 			out_sz[0]=sx;
 			out_sz[1]=sy;
-			if(verbose) UE_LOG(LogTemp, Warning, TEXT("Found texture!!"));
+			if(verbose) UE_LOG(LogTemp, Warning, TEXT("Found texture!! %d,%d"),sx,sy);
 			return sx*sy;
 		}	
 		cnt++;
@@ -171,13 +178,22 @@ int GetTexture(void* out_ptr,int length,int index,int verbose)
 			UTextureRenderTarget2D *TextureRenderTarget = *Itr;
 			int sx=TextureRenderTarget->SizeX,sy=TextureRenderTarget->SizeY;
 			if(verbose) UE_LOG(LogTemp, Warning, TEXT("Found texture!!"));
-			UTexture2D *Texture = UTexture2D::CreateTransient(sx,sy, PF_B8G8R8A8);
-			Texture->SRGB = TextureRenderTarget->SRGB;
+			//UTexture2D *Texture = UTexture2D::CreateTransient(sx,sy, PF_B8G8R8A8);
+			
+			//Texture->SRGB = TextureRenderTarget->SRGB;
 			TArray<FColor> SurfData;
 			FRenderTarget *RenderTarget = TextureRenderTarget->GameThread_GetRenderTargetResource();
 			check((sx*sy*4)<=length);
 			RenderTarget->ReadPixels(SurfData);
 			memcpy(out_ptr,reinterpret_cast<void*>(SurfData.GetData()),sx*sy*4);
+			
+			/* //not working
+			FTexture2DMipMap* MyMipMap = &Texture->PlatformData->Mips[0];
+			FByteBulkData* RawImageData = &MyMipMap->BulkData;
+			void* ptr=static_cast<void*>( RawImageData->Lock( LOCK_READ_ONLY ) );
+			memcpy(out_ptr,ptr,sx*sy*4);
+			RawImageData->Unlock();
+			*/
 			return sx*sy*4;
 		}
 		cnt++;
