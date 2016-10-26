@@ -33,7 +33,7 @@ the minimal file is minimal.py<br/>
 - Add "PyServerTickActor":<br/>
 Press the Plugin button PyServer.  PyServerTickActor will apear in the Outliner pannel in the right.<br/>
 - Play:<br/>
-Press the play button in Play button in the Toolbar. The supporting mode are:  "Selected ViewPort"  and "New Editor Window" 
+Press the play button in Play button in the Toolbar. 
 
 <h4>Running The Demo:</h4>
 The demo is "Lucas-Kanade optical flow tracking" from OpenCV library. <br/>
@@ -43,10 +43,11 @@ In the Modes Pannel in the Place Tab add a WindDirectionalSource. Change The nam
 - Add "PyServerTickActor":<br/>
 Press the Plugin button PyServer.  PyServerTickActor will apear in the Outliner pannel in the right.<br/>
 - Play:<br/>
-Press the play button in Play button in the Toolbar. The supporting mode are:  "Selected ViewPort"  and "New Editor Window" <br/>
+Press the play button in Play button in the Toolbar. The supporting mode for this demo are:  "Selected ViewPort"  and "New Editor Window" <br/>
 Focus on the engine window to get 30 fps!!<br/>
 Watch demo on: <a href="https://youtu.be/ydBFlI_fhso">demo</a><br/>
-This <a href="https://youtu.be/nXu6NCOoIRQ">demo</a> uses a SceneCapture2D and a Render Target to play inside an OpenCV window.
+This <a href="https://youtu.be/nXu6NCOoIRQ">demo</a> uses a SceneCapture2D and a Render Target to play inside an OpenCV window.<br/>
+Another <a href="https://youtu.be/oNB7iSDiUX0">demo</a> uses two SceneCapture2D one for RGB image and the other for depth image.<br/>
 
 <h4>Limitations:</h4>
 For now, the demo can only run in the Editor mode, so it right for research but not much useful for game development. The reason for that is that the screen capture is done outside the Draw function of the FViewPort Class. 
