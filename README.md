@@ -50,6 +50,3 @@ Watch demo on: <a href="https://youtu.be/ydBFlI_fhso">demo</a><br/>
 This <a href="https://youtu.be/nXu6NCOoIRQ">demo</a> uses a SceneCapture2D and a Render Target to play inside an OpenCV window.<br/>
 Another <a href="https://youtu.be/oNB7iSDiUX0">demo</a> uses two SceneCapture2D one for RGB image and the other for depth image.<br/>
 
-<h4>Limitations:</h4>
-For now, the demo can only run in the Editor mode, so it right for research but not much useful for game development. The reason for that is that the screen capture is done outside the Draw function of the FViewPort Class. 
-
