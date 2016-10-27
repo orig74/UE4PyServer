@@ -17,9 +17,11 @@ def main_loop(gworld):
     while 1:
         yield
         ph.SetActorLocation(camera_actor,(loc[0],loc[1]+1*cnt,loc[2]))
-        
+       
+        #this the RGB image 
         img1=cv2.resize(ph.GetTextureImg(),(512,512),cv2.INTER_LINEAR)
-        #print('===',ph.GetActorLocation(camera_actors[1]),ph.GetActorLocation(camera_actors[2]))
+        
+        #this is the depth image its 8 bit and will be recived in the red channel
         img2=ph.GetTextureImg(1,channels=[2])
         print('tic==',time.time()-start)
         start=time.time()
