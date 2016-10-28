@@ -1,6 +1,6 @@
 # UE4PyServer
 <h2>Unreal Engine Python Plugin</h2>
-<h3>Installation: (For now Linux Only)</h3><br/>
+<h3>Installation: (Tested only on Linux but should work on other platforms as well)</h3><br/>
 <h4>Prerequisits</h4>
 - Unreal Engine for linux installation:  <a href="https://wiki.unrealengine.com/Building_On_Linux">UE4</a><br/>
 - Python 3.x installation<br/>
