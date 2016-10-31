@@ -35,7 +35,7 @@ Press the Plugin button PyServer.  PyServerTickActor will apear in the Outliner 
 - Play:<br/>
 Press the play button in Play button in the Toolbar. <br/>
 
-<h4> working in your own directory<h4>
+<h4> working in your own directory</h4>
 run:<br/>
 python config.py --entry_point &lt your entrypoint module &gt --entry_path  &lt module path &gt <br/>
 if the module.py does not exists it will be create with the minimal template. <br/>
