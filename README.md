@@ -33,7 +33,12 @@ the minimal file is minimal.py<br/>
 - Add "PyServerTickActor":<br/>
 Press the Plugin button PyServer.  PyServerTickActor will apear in the Outliner pannel in the right.<br/>
 - Play:<br/>
-Press the play button in Play button in the Toolbar. 
+Press the play button in Play button in the Toolbar. <br/>
+
+<h4> working in your own directory<h4>
+run:<br/>
+python config.py --entry_point &lt your entrypoint module &gt --entry_path  &lt module path &gt <br/>
+if the module.py does not exists it will be create with the minimal template. <br/>
 
 <h4>Running The Demo:</h4>
 The demo is "Lucas-Kanade optical flow tracking" from OpenCV library. <br/>
@@ -51,4 +56,5 @@ This <a href="https://youtu.be/nXu6NCOoIRQ">demo</a> uses a SceneCapture2D and a
 Another <a href="https://youtu.be/oNB7iSDiUX0">demo</a> uses two SceneCapture2D one for RGB image and the other for depth image.<br/>
 
 <h4>Contact Me:</h4>
+or any help regarding the installation, please contact me at:<br/>
 oga13@uclive.ac.nz<br/>
