@@ -1,12 +1,12 @@
 # UE4PyServer
 <h2>Unreal Engine Python Plugin</h2>
 <h3>Installation: (Tested only on Linux but should work on other platforms as well)</h3><br/>
-<h4>Prerequisits</h4>
-- Unreal Engine for linux installation:  <a href="https://wiki.unrealengine.com/Building_On_Linux">UE4</a><br/>
+<h4>Prerequisites</h4>
+- Unreal Engine for Linux installation:  <a href="https://wiki.unrealengine.com/Building_On_Linux">UE4</a><br/>
 - Python 3.x installation<br/>
-For the purpose of the demo I installed python 3.5 Anaconda <a href="https://www.continuum.io/downloads" >Anaconda</a>. <br/>
-<h4>Prerequisits For Otical-Flow Demo</h4>
-- OpenCv for Python 3<br/>
+For the purpose of the demo, I installed python 3.5 Anaconda <a href="https://www.continuum.io/downloads" >Anaconda</a>. <br/>
+<h4>Prerequisites For Optical-Flow Demo</h4>
+- OpenCV for Python 3<br/>
 conda install -c menpo opencv3<br/>
 - numpy<br/>
 conda install numpy 
