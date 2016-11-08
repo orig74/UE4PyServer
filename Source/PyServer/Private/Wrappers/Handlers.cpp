@@ -56,6 +56,21 @@ AActor* FindActorByName(UWorld* uworld,char* name,int verbose)
 	return NULL;
 }
 
+int GetActorsNames(UWorld* uworld,wchar_t* outname,int max_size)
+{
+	FString fname;
+	int p=0;
+	for (TActorIterator<AActor> ActorItr(uworld); ActorItr;++ActorItr)
+	{
+		fname+=ActorItr->GetName();
+		fname+=L"\n";
+	}
+	if(fname.Len()>=max_size) return -1;
+	for(int i=0;i<fname.Len();i++) outname[i]=fname[i];
+	return fname.Len();	
+}
+
+
 void GetActorLocation(AActor* actor,float* outvec)
 {
 	FVector loc=actor->GetActorLocation();

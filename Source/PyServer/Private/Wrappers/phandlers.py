@@ -32,6 +32,16 @@ def FindActorByName(uworld,name,verbose=0):
     namebytes=name.encode('utf-8')
     return libc.FindActorByName(uworld,namebytes,verbose)
 
+libc.GetActorsNames.argtypes=[c_void_p,c_void_p,c_int]
+libc.GetActorsNames.restype=c_int
+def GetActorsNames(uworld,bufsize=1024*10):
+    buf=b'\0'*bufsize
+    sz=sizeof(c_wchar)
+    ret=libc.GetActorsNames(uworld,buf,int(bufsize/sz)) #/2 since its wchar
+    if ret==-1: return None
+    names=buf[:ret*sz].decode('utf16').strip().split('\n')
+    return names 
+
 float3type=c_float*3
 float3type_p=POINTER(float3type)
 libc.GetActorLocation.argtypes=[c_void_p,float3type_p]
