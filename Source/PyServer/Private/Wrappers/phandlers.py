@@ -65,21 +65,6 @@ libc.SetActorRotation.argtypes=[c_void_p,float3type_p]
 def SetActorRotation(actor,invec):
     vec=float3type(*invec)
     libc.SetActorRotation(actor,vec)
-'''
-libc.GetTexturesNames.argtypes=[c_void_p,c_int]
-libc.GetTexturesNames.restype=c_int
-def GetTexturesNames(maxsize=1024*10):
-    buf=b' '*maxsize
-    sz=sizeof(c_wchar)
-    ret=libc.GetTexturesNames(buf,int(maxsize/sz))
-    if ret==-1: return None
-    names=buf[:ret*sz].decode('utf16').strip().split('\n')
-    return names
-'''
-libc.GetTextureByName.argtypes=[c_wchar_p]
-libc.GetTextureByName.restype=c_void_p
-def GetTextureByName(name):
-    return libc.GetTextureByName(name)
 
 
 
@@ -93,7 +78,36 @@ libc.TakeScreenshot.argtypes=[c_void_p,c_int]
 import cv2
 import numpy as np
 tmp_capture_mem=np.array([1],dtype='uint8')
- 
+
+
+libc.GetTextureByName.argtypes=[c_wchar_p]
+libc.GetTextureByName.restype=c_void_p
+def GetTextureByName(name):
+    return libc.GetTextureByName(name)
+
+
+
+libc.GetTextureData.argtypes=[c_void_p,c_void_p,c_int]
+libc.GetTextureData.restype=c_int
+libc.GetTextureSize2.argtypes=[c_void_p,POINTER(int2type)]
+libc.GetTextureSize2.restype=c_int
+def GetTextureData(tex_ptr,channels=[0,1,2]):
+    global tmp_capture_mem
+    sz=int2type()
+    ret=libc.GetTextureSize2(tex_ptr,pointer(sz))
+    req_mem_sz=sz[0]*sz[1]*4# (RGBA)
+    if len(tmp_capture_mem)<req_mem_sz:
+        tmp_capture_mem=np.zeros(req_mem_sz,'uint8')
+    ptr=tmp_capture_mem.ctypes.data_as(c_void_p)
+    libc.GetTextureData(tex_ptr,ptr,req_mem_sz)
+    return tmp_capture_mem[:req_mem_sz].reshape((sz[1],sz[0],4))[:,:,channels] 
+
+   
+
+#libc.GetTextureData.argtypes=[c_void_p,
+#def GetTextureData
+
+
 def TakeScreenshot():
         global tmp_capture_mem
         sz=int2type()

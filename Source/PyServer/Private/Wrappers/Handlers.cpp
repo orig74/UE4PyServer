@@ -182,28 +182,14 @@ int GetTextureSize(int out_sz[2],int index,int verbose)
 	
 }
 
-/*
-void ObjectSourceFileTagName(UObject* object,wchar_t* outname,int maxlen)
-{
-	const FString& fname=object->SourceFileTagName().GetPlainNameString();
-	for(int i=0;i<fname.Len();i++) outname[i]=fname[i];
-}
 
-int GetTexturesNames(wchar_t* outname,int max_size)
+int GetTextureSize2(UTextureRenderTarget2D *TextureRenderTarget ,int out_sz[2])
 {
-	UObjectBaseUtility ObjectBaseUtility;
-	FString fname;
-	for ( TObjectIterator<UTextureRenderTarget2D> Itr; Itr ; ++Itr)
-	{
-		fname+=ObjectBaseUtility.GetPathName(*Itr);
-		fname+=L"\n";
-	}
-	if(fname.Len()>=max_size) return -1;
-	for(int i=0;i<fname.Len();i++) outname[i]=fname[i];
-	return fname.Len();
-	
+	int sx=TextureRenderTarget->SizeX,sy=TextureRenderTarget->SizeY;
+	out_sz[0]=sx;
+	out_sz[1]=sy;
+	return sx*sy;
 }
-*/
 
 UTextureRenderTarget2D* GetTextureByName(wchar_t* name)
 {
@@ -214,9 +200,9 @@ int GetTextureData(UTextureRenderTarget2D* TextureRenderTarget ,void* out_ptr,in
 {
 	int sx=TextureRenderTarget->SizeX,sy=TextureRenderTarget->SizeY;
 	TArray<FColor> SurfData;
-	FRenderTarget *RenderTarget = TextureRenderTarget->GameThread_GetRenderTargetResource();
+	FRenderTarget *renderTarget = TextureRenderTarget->GameThread_GetRenderTargetResource();
 	check((sx*sy*4)<=length);
-	RenderTarget->ReadPixels(SurfData);
+	renderTarget->ReadPixels(SurfData);
 	memcpy(out_ptr,reinterpret_cast<void*>(SurfData.GetData()),sx*sy*4);
 	return sx*sy*4;
 }
