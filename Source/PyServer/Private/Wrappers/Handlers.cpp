@@ -3,6 +3,7 @@
 #include "Engine.h"
 #include "Runtime/Engine/Classes/Components/WindDirectionalSourceComponent.h"
 #include "Runtime/Engine/Classes/Engine/WindDirectionalSource.h"
+#include "Runtime/CoreUObject/Public/UObject/UObjectBaseUtility.h"
 
 extern "C"{
 void* StrToPtr(const char* str)
@@ -59,7 +60,6 @@ AActor* FindActorByName(UWorld* uworld,char* name,int verbose)
 int GetActorsNames(UWorld* uworld,wchar_t* outname,int max_size)
 {
 	FString fname;
-	int p=0;
 	for (TActorIterator<AActor> ActorItr(uworld); ActorItr;++ActorItr)
 	{
 		fname+=ActorItr->GetName();
@@ -182,6 +182,46 @@ int GetTextureSize(int out_sz[2],int index,int verbose)
 	
 }
 
+/*
+void ObjectSourceFileTagName(UObject* object,wchar_t* outname,int maxlen)
+{
+	const FString& fname=object->SourceFileTagName().GetPlainNameString();
+	for(int i=0;i<fname.Len();i++) outname[i]=fname[i];
+}
+
+int GetTexturesNames(wchar_t* outname,int max_size)
+{
+	UObjectBaseUtility ObjectBaseUtility;
+	FString fname;
+	for ( TObjectIterator<UTextureRenderTarget2D> Itr; Itr ; ++Itr)
+	{
+		fname+=ObjectBaseUtility.GetPathName(*Itr);
+		fname+=L"\n";
+	}
+	if(fname.Len()>=max_size) return -1;
+	for(int i=0;i<fname.Len();i++) outname[i]=fname[i];
+	return fname.Len();
+	
+}
+*/
+
+UTextureRenderTarget2D* GetTextureByName(wchar_t* name)
+{
+	return LoadObject<UTextureRenderTarget2D>(NULL, name, NULL, LOAD_None, NULL);
+}
+
+int GetTextureData(UTextureRenderTarget2D* TextureRenderTarget ,void* out_ptr,int length)
+{
+	int sx=TextureRenderTarget->SizeX,sy=TextureRenderTarget->SizeY;
+	TArray<FColor> SurfData;
+	FRenderTarget *RenderTarget = TextureRenderTarget->GameThread_GetRenderTargetResource();
+	check((sx*sy*4)<=length);
+	RenderTarget->ReadPixels(SurfData);
+	memcpy(out_ptr,reinterpret_cast<void*>(SurfData.GetData()),sx*sy*4);
+	return sx*sy*4;
+}
+
+
 int GetTexture(void* out_ptr,int length,int index,int verbose)
 {
 	int cnt=0;
@@ -193,22 +233,13 @@ int GetTexture(void* out_ptr,int length,int index,int verbose)
 			UTextureRenderTarget2D *TextureRenderTarget = *Itr;
 			int sx=TextureRenderTarget->SizeX,sy=TextureRenderTarget->SizeY;
 			if(verbose) UE_LOG(LogTemp, Warning, TEXT("Found texture!!"));
-			//UTexture2D *Texture = UTexture2D::CreateTransient(sx,sy, PF_B8G8R8A8);
 			
-			//Texture->SRGB = TextureRenderTarget->SRGB;
 			TArray<FColor> SurfData;
 			FRenderTarget *RenderTarget = TextureRenderTarget->GameThread_GetRenderTargetResource();
 			check((sx*sy*4)<=length);
 			RenderTarget->ReadPixels(SurfData);
 			memcpy(out_ptr,reinterpret_cast<void*>(SurfData.GetData()),sx*sy*4);
 			
-			/* //not working
-			FTexture2DMipMap* MyMipMap = &Texture->PlatformData->Mips[0];
-			FByteBulkData* RawImageData = &MyMipMap->BulkData;
-			void* ptr=static_cast<void*>( RawImageData->Lock( LOCK_READ_ONLY ) );
-			memcpy(out_ptr,ptr,sx*sy*4);
-			RawImageData->Unlock();
-			*/
 			return sx*sy*4;
 		}
 		cnt++;

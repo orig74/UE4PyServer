@@ -37,7 +37,7 @@ libc.GetActorsNames.restype=c_int
 def GetActorsNames(uworld,bufsize=1024*10):
     buf=b'\0'*bufsize
     sz=sizeof(c_wchar)
-    ret=libc.GetActorsNames(uworld,buf,int(bufsize/sz)) #/2 since its wchar
+    ret=libc.GetActorsNames(uworld,buf,int(bufsize/sz))
     if ret==-1: return None
     names=buf[:ret*sz].decode('utf16').strip().split('\n')
     return names 
@@ -65,6 +65,22 @@ libc.SetActorRotation.argtypes=[c_void_p,float3type_p]
 def SetActorRotation(actor,invec):
     vec=float3type(*invec)
     libc.SetActorRotation(actor,vec)
+'''
+libc.GetTexturesNames.argtypes=[c_void_p,c_int]
+libc.GetTexturesNames.restype=c_int
+def GetTexturesNames(maxsize=1024*10):
+    buf=b' '*maxsize
+    sz=sizeof(c_wchar)
+    ret=libc.GetTexturesNames(buf,int(maxsize/sz))
+    if ret==-1: return None
+    names=buf[:ret*sz].decode('utf16').strip().split('\n')
+    return names
+'''
+libc.GetTextureByName.argtypes=[c_wchar_p]
+libc.GetTextureByName.restype=c_void_p
+def GetTextureByName(name):
+    return libc.GetTextureByName(name)
+
 
 
 libc.MoveToCameraActor.argtypes=[c_void_p,c_void_p,c_int]
