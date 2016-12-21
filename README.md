@@ -56,5 +56,5 @@ This <a href="https://youtu.be/nXu6NCOoIRQ">demo</a> uses a SceneCapture2D and a
 Another <a href="https://youtu.be/oNB7iSDiUX0">demo</a> uses two SceneCapture2D one for RGB image and the other for depth image.<br/>
 
 <h4>Contact Me:</h4>
-or any help regarding the installation, please contact me at:<br/>
+For any help regarding the installation, please contact me at:<br/>
 oga13@uclive.ac.nz<br/>
