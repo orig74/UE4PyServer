@@ -28,7 +28,7 @@ print('#define SYSPATH "'+file_dir+'/Private"',file=fd)
 print('#include "'+include_path+'/Python.h"',file=fd)
 fd.close()
 #print('}',file=fd)
-assert(os.system("python -m compileall .")==0) #saves time incase of syntax errors in python files
+assert(os.system("python3 -m compileall .")==0) #saves time incase of syntax errors in python files
 
 #trying to guess project name and project file
 project_dir=os.path.abspath(file_dir+'/../../../../')
