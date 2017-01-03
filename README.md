@@ -25,6 +25,8 @@ for the test demo run:<br/>
 python config.py --entry_point track_test
 - run:<br/>
 python build.py --engine-path=\<unreal engine dir PATH\><br/>
+or (if you are using other python distribution)<br/>
+python3 build.py --engine-path=\<unreal engine dir PATH\><br/>
 
 <h4>Running minimal example:</h4>
 - Set entry point for the minimal file<br/>
