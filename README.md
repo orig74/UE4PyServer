@@ -27,6 +27,8 @@ python config.py --entry_point track_test
 python build.py --ue4path=\<unreal engine dir PATH\><br/>
 or (if you are using other python distribution)<br/>
 python3 build.py --ue4path=\<unreal engine dir PATH\><br/>
+- Open your project and enable the plugin:<br/>
+goto Edit->Plugins and enable the PyServer Plugin (under other).<br/>
 
 <h4>Running minimal example:</h4>
 - Set entry point for the minimal file<br/>
