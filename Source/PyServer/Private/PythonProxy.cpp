@@ -39,7 +39,9 @@ void* phandle=NULL;
 
 void InitPythonFunctions()
 {
-	phandle=dlopen(PYTHON_LIB,RTLD_LAZY);
+	//phandle=dlopen("/usr/lib/x87_64-linux-gnu/libpython3.5m.so",RTLD_LAZY);
+	//phandle=dlopen(PYTHON_LIB,RTLD_LAZY);
+	phandle=dlopen(PYTHON_LIB,RTLD_GLOBAL | RTLD_NOW);
 	_Py_Initialize=reinterpret_cast<void (*)()>(dlsym(phandle,"Py_Initialize"));
 	PyRun_SimpleString=reinterpret_cast<void (*)(const char*)>(dlsym(phandle,"PyRun_SimpleString"));
 }
@@ -51,7 +53,7 @@ void LoadPythonInterperter()
 	if (phandle==NULL)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Starting LoadPythonInterperter...\n"));
-		//printf("---%d %d %s\n",phandle,Py_Initialize,PYTHON_LIB);
+		UE_LOG(LogTemp, Warning, TEXT("---- %d %d %s\n"),phandle,_Py_Initialize,PYTHON_LIB);
 		InitPythonFunctions();
 		(*_Py_Initialize)();
 		PYRUN("import sys;sys.path.append('" SYSPATH "')");
