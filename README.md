@@ -15,8 +15,8 @@ conda install numpy
 - Create a project in unreal engine:<br/>
 - Add an empty c++ class so the project will be a code project<br/>
 - Close the project<br/>
-- In the project dir create Plugin dir<br/>
-- Clone UE4PyServer to that dir<br/>
+- In the project dir create Plugins dir<br/>
+- Clone UE4PyServer into that dir<br/>
 git clone  https://github.com/orig74/UE4PyServer.git<br/>
 - cd to:  [ProjectPath]/Plugins/UE4PyServer/Source/PyServer<br/>
 - run: <br/>
