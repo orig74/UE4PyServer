@@ -42,7 +42,7 @@ Press the play button in Play button in the Toolbar. <br/>
 <h4> working in your own directory:</h4>
 run:<br/>
 python config.py --entry_point \< your entrypoint module \> --entry_path  \< module path \> <br/>
-The entry_point tells the module where main_loop function exists if the entrypoint file does not exists it is created with the functions main_loop and kill<br/>
+The entry_point tells the module where the main_loop function exists. If the entrypoint file does not exists, it is created with the functions main_loop and the function kill.<br/>
 
 <h4>Running The Demo:</h4>
 The demo is "Lucas-Kanade optical flow tracking" from OpenCV library. <br/>
