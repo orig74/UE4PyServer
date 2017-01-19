@@ -1,5 +1,7 @@
 # UE4PyServer
 <h2>Unreal Engine Python Plugin</h2>
+This is a plugin dedicated to enabling communication between Python code and Unreal Engine, especially enables retrieving video from the unreal engine to the python environment. 
+
 <h3>Installation: (Tested only on Linux but should work on other platforms as well)</h3><br/>
 <h4>Prerequisites</h4>
 - Unreal Engine for Linux installation:  <a href="https://wiki.unrealengine.com/Building_On_Linux">UE4</a><br/>
