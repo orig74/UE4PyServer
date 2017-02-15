@@ -1,6 +1,6 @@
 # UE4PyServer
 <h2>Unreal Engine Python Plugin</h2>
-This is a plugin dedicated to enabling communication between Python code and Unreal Engine, especially enables retrieving video from the unreal engine to the python environment. 
+This is a plugin dedicated to enabling communication between Python code and Unreal Engine, especially enables retrieving video from the unreal engine editor to the python environment. I am also working on a parallel project <a href="https://github.com/orig74/UE4PyhtonBridge">UE4PyhtonBridge</a> which eventually will replace this project.UE4PyhtonBridge has support for baked games and also used by the <a href="https://github.com/orig74/DroneSimLab">DroneSimLab</a> project.
 
 <h3>Installation: (Tested only on Linux but should work on other platforms as well)</h3><br/>
 <h4>Prerequisites</h4>
