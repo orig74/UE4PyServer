@@ -1,4 +1,7 @@
 # UE4PyServer
+## Importent
+This project is no longer maintained it is replaced by the <a href="https://github.com/orig74/UE4PyhtonBridge">UE4PyhtonBridge</a> 
+
 <h2>Unreal Engine Python Plugin</h2>
 This is a plugin dedicated to enabling communication between Python code and Unreal Engine, especially enables retrieving video from the unreal engine editor to the python environment. I am also working on a parallel project <a href="https://github.com/orig74/UE4PyhtonBridge">UE4PyhtonBridge</a> which eventually will replace this project. UE4PyhtonBridge has support for stand alone games and also used by the <a href="https://github.com/orig74/DroneSimLab">DroneSimLab</a> project.
 
